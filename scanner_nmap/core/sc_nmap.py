@@ -10,7 +10,6 @@ __doc__ = '''
 from nmap.nmap import PortScanner
 from common.banner.banner import Banner
 from common.IPlocate.ipinfo import IPInfo
-import json
 import time
 
 
@@ -35,7 +34,7 @@ class sc_nmap():
         :return: 列表
         """
         nm = PortScanner()
-        nm.scan(hosts=self.ips, ports=self.ports, arguments="-sV -Pn")
+        nm.scan(hosts=self.ips, ports=self.ports, arguments="-sV -Pn -O", sudo=True)
         return self._get_res(nm)
 
     def _get_res(self, nmap_obj):
@@ -59,6 +58,8 @@ class sc_nmap():
                             info["protocol"] = protocol + ":::" + name
                             info["port"] = key
                             info["date"] = time.strftime("%Y-%m-%d")
+                            info["vendor"] = nmap_obj[host]["vendor"]
+                            info["OS"] = nmap_obj[host]["osmatch"][0]["name"]
                             info['product'] = nmap_obj[host][protocol][key]["product"]
                             info["product_version"] = nmap_obj[host][protocol][key]["version"]
                             try:
@@ -78,13 +79,3 @@ class sc_nmap():
             return {}
         b = Banner(name=name, host=host, port=port)
         return b.res
-
-
-# if __name__ == '__main__':
-#     demo = sc_nmap(["10.17.36.135", "10.17.33.78", "106.15.200.166"], ['80'])
-#     # demo = sc_nmap(["10.17.36.135", "10.17.33.78"])
-#     res = demo.scan_ip_port()
-#     with open("data.json", "w") as f:
-#         for r in res:
-#             f.write(json.dumps(r) + "\n")
-#     print(res)
