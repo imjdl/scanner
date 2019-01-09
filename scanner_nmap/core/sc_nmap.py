@@ -11,6 +11,7 @@ from nmap.nmap import PortScanner
 from common.banner.banner import Banner
 from common.IPlocate.ipinfo import IPInfo
 import json
+import time
 
 
 class sc_nmap():
@@ -52,10 +53,12 @@ class sc_nmap():
                     for key in nmap_obj[host][protocol].keys():
                         if nmap_obj[host][protocol][key]["state"] == "open":
                             name = nmap_obj[host][protocol][key]["name"]
+                            data = {}
                             info = {}
                             info["host"] = host
                             info["protocol"] = protocol + ":::" + name
                             info["port"] = key
+                            info["date"] = time.strftime("%Y-%m-%d")
                             info['product'] = nmap_obj[host][protocol][key]["product"]
                             info["product_version"] = nmap_obj[host][protocol][key]["version"]
                             try:
@@ -64,7 +67,9 @@ class sc_nmap():
                                 info["extrainfo"] = ""
                             info = dict(info, **self._get_banner(name=name, host=host, port=key))
                             info = dict(info, **IPInfo(host).get_city())
-                            results.append(info)
+                            id = host + "_" + str(key)
+                            data[id] = info
+                            results.append(data)
         return results
 
     def _get_banner(self, name, host, port):

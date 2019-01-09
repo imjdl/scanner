@@ -16,5 +16,5 @@ import time
 def test(hosts, ports):
     from scanner_nmap.core.sc_nmap import sc_nmap
     demo = sc_nmap(hosts, ports)
-    res = demo.scan()
+    res = demo.scan_ip_port()
     return res
