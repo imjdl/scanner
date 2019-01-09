@@ -35,6 +35,3 @@ class IPInfo(object):
         except Exception as e:
             # 局域网IP不在数据库中
             return {}
-
-if __name__ == '__main__':
-    print(IPInfo("10.17.36.135").get_city())

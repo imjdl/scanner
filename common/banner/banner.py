@@ -44,6 +44,7 @@ class Banner(object):
             gevent.spawn(self.get_banner),
         ])
         self.res["headers"] = self._dict_str(self.headers)
+        self.res["title"] = self.get_title()
         self.res["content"] = self.content
 
     def _dict_str(self, dict_obj):
@@ -82,6 +83,13 @@ class Banner(object):
                 mark_list.append([name, location, key, value])
             for mark in mark_list:
                 tasks.put(mark)
+
+    def get_title(self):
+        regular = re.compile("<title>[\s\S]*?</title>")
+        titles = regular.findall(self.content)
+        title = ":::".join(titles)
+        title = title.replace("<title>", "").replace("</title>", "")
+        return title
 
     def get_banner(self):
         while not tasks.empty():
@@ -125,10 +133,3 @@ class Banner(object):
         except Exception as e:
             pass
 
-# if __name__ == '__main__':
-#     b = Banner("http", "106.15.200.166", "80")
-#     a = {"a": 1}
-#     print(b.res)
-#     print(type(b.res))
-#     res = dict(b.res, **a)
-#     print(res)
