@@ -9,6 +9,7 @@ __doc__ = '''
 
 from nmap.nmap import PortScanner
 from common.banner.banner import Banner
+from common.IPlocate.ipinfo import IPInfo
 
 
 class sc_nmap():
@@ -54,26 +55,27 @@ class sc_nmap():
                             info["host"] = host
                             info["protocol"] = protocol + ":::" + name
                             info["port"] = key
-                            info["banner"] = self._get_banner(name=name, host=host, port=key)
                             info['product'] = nmap_obj[host][protocol][key]["product"]
                             info["product_version"] = nmap_obj[host][protocol][key]["version"]
-                            # 还有IP的坐标信息等
                             try:
                                 info["extrainfo"] = nmap_obj[host][protocol][key]["extrainfo"]
                             except:
                                 info["extrainfo"] = ""
+                            info = dict(info, **self._get_banner(name=name, host=host, port=key))
+                            info = dict(info, **IPInfo(host).get_city())
                             results.append(info)
         return results
 
     def _get_banner(self, name, host, port):
+
         if "http" not in name:
-            return ""
+            return {}
         b = Banner(name=name, host=host, port=port)
         return b.res
 
 
 if __name__ == '__main__':
     demo = sc_nmap(["10.17.36.135", "10.17.33.78", "106.15.200.166"], ['80'])
-    # demo = sc_nmap(["10.17.36.135", "10.17.33.78"])
+    demo = sc_nmap(["10.17.36.135", "10.17.33.78"])
     res = demo.scan_ip_port()
     print(res)

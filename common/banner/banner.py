@@ -45,14 +45,12 @@ class Banner(object):
         ])
         self.res["headers"] = self._dict_str(self.headers)
         self.res["content"] = self.content
-        print(self._dict_str(self.headers))
 
     def _dict_str(self, dict_obj):
         res = []
         res.append("Code: " + self.code)
         for key, value in dict_obj.items():
             res.append(key + " : "+value)
-
         res = "\n".join(res)
         return res
 
@@ -99,8 +97,8 @@ class Banner(object):
                 pass
 
     def discern_from_header(self, name, discern_type, key, reg):
-        if "Server" in self.headers:
-            self.res["Server"] = self.headers["Server"]
+        # if "Server" in self.headers:
+        #     self.res["Server"] = self.headers["Server"]
         if "X-Powered-By" in self.headers:
             self.res["X-Powered-By"] = self.headers["X-Powered-By"]
         if key in self.headers and (re.search(reg, self.headers[key], re.I)):
@@ -126,3 +124,11 @@ class Banner(object):
                 pass
         except Exception as e:
             pass
+
+# if __name__ == '__main__':
+#     b = Banner("http", "106.15.200.166", "80")
+#     a = {"a": 1}
+#     print(b.res)
+#     print(type(b.res))
+#     res = dict(b.res, **a)
+#     print(res)
