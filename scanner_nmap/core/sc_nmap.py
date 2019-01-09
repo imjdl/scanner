@@ -10,6 +10,7 @@ __doc__ = '''
 from nmap.nmap import PortScanner
 from common.banner.banner import Banner
 from common.IPlocate.ipinfo import IPInfo
+import json
 
 
 class sc_nmap():
@@ -74,8 +75,11 @@ class sc_nmap():
         return b.res
 
 
-if __name__ == '__main__':
-    demo = sc_nmap(["10.17.36.135", "10.17.33.78", "106.15.200.166"], ['80'])
-    demo = sc_nmap(["10.17.36.135", "10.17.33.78"])
-    res = demo.scan_ip_port()
-    print(res)
+# if __name__ == '__main__':
+#     demo = sc_nmap(["10.17.36.135", "10.17.33.78", "106.15.200.166"], ['80'])
+#     # demo = sc_nmap(["10.17.36.135", "10.17.33.78"])
+#     res = demo.scan_ip_port()
+#     with open("data.json", "w") as f:
+#         for r in res:
+#             f.write(json.dumps(r) + "\n")
+#     print(res)
