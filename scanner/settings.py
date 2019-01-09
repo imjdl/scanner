@@ -125,10 +125,12 @@ STATIC_URL = '/static/'
 # CELERY SETTINGS
 
 # Broker配置，使用Redis作为消息中间件
-CELERY_BROKER_URL = 'redis://10.17.36.135:6379/0'
+# CELERY_BROKER_URL = 'redis://10.17.36.135:6379/0'
+CELERY_BROKER_URL = 'redis://demo.com:6379/0'
 
 # BACKEND配置，这里使用redis
-CELERY_RESULT_BACKEND = 'redis://10.17.36.135:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://10.17.36.135:6379/0'
+CELERY_RESULT_BACKEND = 'redis://demo.com:6379/0'
 
 # 结果序列化方案
 CELERY_RESULT_SERIALIZER = 'json'
