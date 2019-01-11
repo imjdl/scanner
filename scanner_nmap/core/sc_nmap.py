@@ -6,11 +6,16 @@ __doc__ = '''
 @time: 19-1-3 下午11:28
 @desc: nmap 的基础模块，在zmap基础之上，进行端口的服务探测
 '''
-
+import gevent.monkey
+gevent.monkey.patch_all()
+import gevent
 from nmap.nmap import PortScanner
 from common.banner.banner import Banner
 from common.IPlocate.ipinfo import IPInfo
 import time
+import queue
+
+tasks = queue.Queue()
 
 
 class sc_nmap():
@@ -22,8 +27,11 @@ class sc_nmap():
         :param ips:dict
         :param ports:dict
         '''
-        self.ips = " ".join(ips) if ips != None else None
+        # self.ips = " ".join(ips) if ips != None else None
         self.ports = ",".join(ports) if ports != None else None
+        self.results = []
+        for ip in ips:
+            tasks.put(ip)
 
     def scan_ip_port(self):
         """
@@ -33,9 +41,27 @@ class sc_nmap():
         nmap -sV -Pn 192.168.1.1 192.168.1.2
         :return: 列表
         """
-        nm = PortScanner()
-        nm.scan(hosts=self.ips, ports=self.ports, arguments="-sV -Pn -O", sudo=True)
-        return self._get_res(nm)
+        gevent.joinall([
+            gevent.spawn(self._scan),
+            gevent.spawn(self._scan),
+            gevent.spawn(self._scan),
+            gevent.spawn(self._scan),
+            gevent.spawn(self._scan),
+            gevent.spawn(self._scan),
+            gevent.spawn(self._scan),
+            gevent.spawn(self._scan),
+            gevent.spawn(self._scan),
+            gevent.spawn(self._scan),
+            gevent.spawn(self._scan),
+        ])
+        return self.results
+
+    def _scan(self):
+        while not tasks.empty():
+            ip = tasks.get()
+            nm = PortScanner()
+            nm.scan(hosts=ip, ports=self.ports, arguments="-sV -Pn -O -T5", sudo=True)
+            self._get_res(nm)
 
     def _get_res(self, nmap_obj):
         '''
@@ -43,7 +69,6 @@ class sc_nmap():
         :param nmap_obj: nmap对象
         :return: 列表
         '''
-        results = []
         hosts = nmap_obj.all_hosts()
         for host in hosts:
             if nmap_obj[host].state() == "up":
@@ -70,8 +95,7 @@ class sc_nmap():
                             info = dict(info, **IPInfo(host).get_city())
                             id = host + "_" + str(key)
                             data[id] = info
-                            results.append(data)
-        return results
+                            self.results.append(data)
 
     def _get_banner(self, name, host, port):
 
@@ -79,3 +103,13 @@ class sc_nmap():
             return {}
         b = Banner(name=name, host=host, port=port)
         return b.res
+
+
+# if __name__ == '__main__':
+    # 96.45.186.226
+    # s = sc_nmap(["10.17.36.135", "10.17.42.240"], ['80'])
+    # ips = []
+    # for ip in range(1, 255):
+    #     ips.append("96.45.186." + str(ip))
+    # s = sc_nmap(ips, ['80'])
+    # print(s.scan_ip_port())

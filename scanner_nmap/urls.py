@@ -11,7 +11,7 @@ from django.conf.urls import url, include
 from scanner_nmap import views
 
 urlpatterns = [
-    url(r"^$", views.index, name="index"),
     url(r"^res/", views.get_res, name="get"),
-    url(r'^state/', views.get_statues, name="state")
+    url(r'^state/', views.get_statues, name="state"),
+    url(r"^$", views.index, name="index"),
 ]
