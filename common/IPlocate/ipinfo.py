@@ -34,4 +34,13 @@ class IPInfo(object):
             return ip_data
         except Exception as e:
             # 局域网IP不在数据库中
-            return {}
+            ip_data = {}
+            ip_data["location"] = {}
+            ip_data["location"]["latitude"] = 0
+            ip_data["location"]["longitude"] = 0
+            ip_data["time_zone"] = ""
+            ip_data["continent"] = ""
+            ip_data["country"] = ""
+            ip_data["province"] = ""
+            ip_data["city"] = ""
+            return ip_data

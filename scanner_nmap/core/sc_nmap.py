@@ -6,20 +6,32 @@ __doc__ = '''
 @time: 19-1-3 下午11:28
 @desc: nmap 的基础模块，在zmap基础之上，进行端口的服务探测
 {
-  "192.168.1.1_80": {
-    "host": "",
-    "protocol": "",
-    "port": 80,
-    "date": "2019-01-01",
-    "vendor": {},
-    "OS": "",
-    "server_version": "",
-    "extrainfo": "",
-    "headers": "",
-    "title": "",
-    "content": ""
-  }
-}
+  "106.15.200.166_80":
+    {
+      "host": "106.15.200.166",
+      "protocol": "tcp:http",
+      "port": 80,
+      "date": "2019-01-17",
+      "vendor": {},
+      "OS": "IPCop 2.0 (Linux 2.6.32)",
+      "server": "Apache httpd",
+      "server_version": "2.4.7",
+      "extrainfo": "(Ubuntu)",
+      "banner": "Langeuage:php  ThinkPHP",
+      "state_code": "200",
+      "headers": "",
+      "title": "",
+      "content": "",
+      "location": {
+        "latitude": 39.9289,
+        "longitude": 116.3883,
+      },
+      "time_zone": "Asia/Shanghai",
+      "continent": "Asia",
+      "country": "China",
+      "province": "Beijing",
+      "city": null
+    }}
 '''
 import gevent.monkey
 gevent.monkey.patch_all()
@@ -29,6 +41,7 @@ from common.banner.banner import Banner
 from common.IPlocate.ipinfo import IPInfo
 import time
 import queue
+import json
 
 tasks = queue.Queue()
 
@@ -98,7 +111,7 @@ class sc_nmap():
                             info["protocol"] = protocol + ":" + name
                             info["port"] = key
                             info["date"] = time.strftime("%Y-%m-%d")
-                            info["vendor"] = nmap_obj[host]["vendor"]
+                            info["vendor"] = json.dumps(nmap_obj[host]["vendor"])
                             info["OS"] = nmap_obj[host]["osmatch"][0]["name"]
                             info['server'] = nmap_obj[host][protocol][key]["product"]
                             info["server_version"] = nmap_obj[host][protocol][key]["version"]
@@ -114,14 +127,22 @@ class sc_nmap():
 
     def _get_banner(self, name, host, port):
         if "http" not in name:
-            return {"headers": "", "title": "", "content": ""}
+            return {"state_code": "", "headers": "", "title": "", "content": "", "banner": ""}
         b = Banner(name=name, host=host, port=port)
         return b.res
 
-# if __name__ == '__main__':
-#     s = sc_nmap(["10.17.33.78", "10.17.31.242"], ['80', '6379', "3306", "22"])
-#     res = s.scan_ip_port()
-#     import json
-#     with open("res.json", "a") as f:
-#         for r in res:
-#             f.write(json.dumps(r) + "\n")
+
+if __name__ == '__main__':
+    s = sc_nmap(["10.17.31.242", "106.15.200.166"], ['80'])
+    res = s.scan_ip_port()
+    from common.elastic.elastic import es_elasticsearch
+    es = es_elasticsearch()
+    es.bulk(res)
+    # import json
+    # for r in res:
+    #     for key, value in r.items():
+    #         print(key)
+    #         print(value)
+    # with open("res.json", "a") as f:
+    #     for r in res:
+    #         f.write(json.dumps(r) + "\n")

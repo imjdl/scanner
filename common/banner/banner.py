@@ -29,6 +29,7 @@ class Banner(object):
             self.url = "https://" + host + ":" + str(port)
         self.content, self.headers = self._get_text_header()
         self.res = {}
+        self.res["banner"] = set()
         self.read_fingerprint()
         gevent.joinall([
             gevent.spawn(self.get_banner),
@@ -43,9 +44,11 @@ class Banner(object):
             gevent.spawn(self.get_banner),
             gevent.spawn(self.get_banner),
         ])
+        self.res["state_code"] = self.code
         self.res["headers"] = self._dict_str(self.headers)
         self.res["title"] = self.get_title()
         self.res["content"] = self.content
+        self.res["banner"] = "  ".join(list(self.res["banner"]))
 
     def _dict_str(self, dict_obj):
         res = []
@@ -108,17 +111,17 @@ class Banner(object):
         # if "Server" in self.headers:
         #     self.res["Server"] = self.headers["Server"]
         if "X-Powered-By" in self.headers:
-            self.res["X-Powered-By"] = self.headers["X-Powered-By"]
+            self.res["banner"].add(self.headers["X-Powered-By"])
         if key in self.headers and (re.search(reg, self.headers[key], re.I)):
-            name_first, name_last = name.split(":")
-            self.res[name_first] = name_last
+            self.res["banner"].add(name)
         else:
             pass
 
     def discern_from_index(self, name, discern_type, key, reg):
         if re.search(reg, self.content, re.I):
-            name_first, name_last = name.split(":")
-            self.res[name_first] = name_last
+            # name_first, name_last = name.split(":")
+            # self.res[name_first] = name_last
+            self.res["banner"].add(name)
         else:
             pass
 
@@ -126,8 +129,9 @@ class Banner(object):
         try:
             result = requests.get(self.url + key, timeout=15, verify=False)
             if re.search(reg, result.content, re.I):
-                name_first, name_last = name.split(":")
-                self.res[name_first] = name_last
+                # name_first, name_last = name.split(":")
+                # self.res[name_first] = name_last
+                self.res["banner"].add(name)
             else:
                 pass
         except Exception as e:
