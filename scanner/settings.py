@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'scanner_zmap',
-    'scanner_nmap'
+    'scanner_nmap',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,12 @@ CELERY_RESULT_BACKEND = 'redis://demo.com:6379/0'
 
 # 结果序列化方案
 CELERY_RESULT_SERIALIZER = 'json'
+
+# restframework
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}

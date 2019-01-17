@@ -5,6 +5,21 @@ __doc__ = '''
 @file: nmap.py
 @time: 19-1-3 下午11:28
 @desc: nmap 的基础模块，在zmap基础之上，进行端口的服务探测
+{
+  "192.168.1.1_80": {
+    "host": "",
+    "protocol": "",
+    "port": 80,
+    "date": "2019-01-01",
+    "vendor": {},
+    "OS": "",
+    "server_version": "",
+    "extrainfo": "",
+    "headers": "",
+    "title": "",
+    "content": ""
+  }
+}
 '''
 import gevent.monkey
 gevent.monkey.patch_all()
@@ -80,13 +95,13 @@ class sc_nmap():
                             data = {}
                             info = {}
                             info["host"] = host
-                            info["protocol"] = protocol + ":::" + name
+                            info["protocol"] = protocol + ":" + name
                             info["port"] = key
                             info["date"] = time.strftime("%Y-%m-%d")
                             info["vendor"] = nmap_obj[host]["vendor"]
                             info["OS"] = nmap_obj[host]["osmatch"][0]["name"]
-                            info['product'] = nmap_obj[host][protocol][key]["product"]
-                            info["product_version"] = nmap_obj[host][protocol][key]["version"]
+                            info['server'] = nmap_obj[host][protocol][key]["product"]
+                            info["server_version"] = nmap_obj[host][protocol][key]["version"]
                             try:
                                 info["extrainfo"] = nmap_obj[host][protocol][key]["extrainfo"]
                             except:
@@ -98,18 +113,15 @@ class sc_nmap():
                             self.results.append(data)
 
     def _get_banner(self, name, host, port):
-
         if "http" not in name:
-            return {}
+            return {"headers": "", "title": "", "content": ""}
         b = Banner(name=name, host=host, port=port)
         return b.res
 
-
 # if __name__ == '__main__':
-    # 96.45.186.226
-    # s = sc_nmap(["10.17.36.135", "10.17.42.240"], ['80'])
-    # ips = []
-    # for ip in range(1, 255):
-    #     ips.append("96.45.186." + str(ip))
-    # s = sc_nmap(ips, ['80'])
-    # print(s.scan_ip_port())
+#     s = sc_nmap(["10.17.33.78", "10.17.31.242"], ['80', '6379', "3306", "22"])
+#     res = s.scan_ip_port()
+#     import json
+#     with open("res.json", "a") as f:
+#         for r in res:
+#             f.write(json.dumps(r) + "\n")
