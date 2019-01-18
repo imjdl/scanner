@@ -27,6 +27,7 @@ class Banner(object):
             self.url = "http://" + host + ":" + str(port)
         else:
             self.url = "https://" + host + ":" + str(port)
+        self.code = '0'
         self.content, self.headers = self._get_text_header()
         self.res = {}
         self.res["banner"] = set()
@@ -51,6 +52,8 @@ class Banner(object):
         self.res["banner"] = "  ".join(list(self.res["banner"]))
 
     def _dict_str(self, dict_obj):
+        if dict_obj == None:
+            return ""
         res = []
         res.append("Code: " + self.code)
         for key, value in dict_obj.items():
@@ -88,11 +91,14 @@ class Banner(object):
                 tasks.put(mark)
 
     def get_title(self):
-        regular = re.compile("<title>[\s\S]*?</title>")
-        titles = regular.findall(self.content)
-        title = ":::".join(titles)
-        title = title.replace("<title>", "").replace("</title>", "")
-        return title
+        try:
+            regular = re.compile("<title>[\s\S]*?</title>")
+            titles = regular.findall(self.content)
+            title = ":::".join(titles)
+            title = title.replace("<title>", "").replace("</title>", "")
+            return title
+        except Exception as e:
+            return ""
 
     def get_banner(self):
         while not tasks.empty():
@@ -108,29 +114,29 @@ class Banner(object):
                 pass
 
     def discern_from_header(self, name, discern_type, key, reg):
-        # if "Server" in self.headers:
-        #     self.res["Server"] = self.headers["Server"]
-        if "X-Powered-By" in self.headers:
-            self.res["banner"].add(self.headers["X-Powered-By"])
-        if key in self.headers and (re.search(reg, self.headers[key], re.I)):
-            self.res["banner"].add(name)
-        else:
+        try:
+            if "X-Powered-By" in self.headers:
+                self.res["banner"].add(self.headers["X-Powered-By"])
+            if key in self.headers and (re.search(reg, self.headers[key], re.I)):
+                self.res["banner"].add(name)
+            else:
+                pass
+        except Exception as e:
             pass
 
     def discern_from_index(self, name, discern_type, key, reg):
-        if re.search(reg, self.content, re.I):
-            # name_first, name_last = name.split(":")
-            # self.res[name_first] = name_last
-            self.res["banner"].add(name)
-        else:
+        try:
+            if re.search(reg, self.content, re.I):
+                self.res["banner"].add(name)
+            else:
+                pass
+        except Exception as e:
             pass
 
     def discern_from_url(self, name, discern_type, key, reg):
         try:
             result = requests.get(self.url + key, timeout=15, verify=False)
             if re.search(reg, result.content, re.I):
-                # name_first, name_last = name.split(":")
-                # self.res[name_first] = name_last
                 self.res["banner"].add(name)
             else:
                 pass

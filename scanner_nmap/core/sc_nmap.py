@@ -112,7 +112,10 @@ class sc_nmap():
                             info["port"] = key
                             info["date"] = time.strftime("%Y-%m-%d")
                             info["vendor"] = json.dumps(nmap_obj[host]["vendor"])
-                            info["OS"] = nmap_obj[host]["osmatch"][0]["name"]
+                            try:
+                                info["OS"] = nmap_obj[host]["osmatch"][0]["name"]
+                            except Exception as e:
+                                info["OS"] = ""
                             info['server'] = nmap_obj[host][protocol][key]["product"]
                             info["server_version"] = nmap_obj[host][protocol][key]["version"]
                             try:
@@ -132,12 +135,12 @@ class sc_nmap():
         return b.res
 
 
-if __name__ == '__main__':
-    s = sc_nmap(["10.17.31.242", "106.15.200.166"], ['80'])
-    res = s.scan_ip_port()
-    from common.elastic.elastic import es_elasticsearch
-    es = es_elasticsearch()
-    es.bulk(res)
+# if __name__ == '__main__':
+#     s = sc_nmap(["10.17.31.242", "106.15.200.166"], ['80'])
+#     res = s.scan_ip_port()
+#     from common.elastic.elastic import es_elasticsearch
+#     es = es_elasticsearch()
+#     es.bulk(res)
     # import json
     # for r in res:
     #     for key, value in r.items():

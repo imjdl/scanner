@@ -23,6 +23,10 @@ def get_res(request):
     id = request.GET.get("id")
     from celery.result import AsyncResult
     res_list = AsyncResult(id).get()
+    try:
+        res_list["ips"].remove("")
+    except Exception as e:
+        pass
     return JsonResponse(res_list)
 
 

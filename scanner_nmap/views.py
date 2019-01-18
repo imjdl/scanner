@@ -9,7 +9,9 @@ from celery.result import AsyncResult
 def index(request):
     zmap_task_id = request.GET.get("id")
     zmap_list = AsyncResult(zmap_task_id).get()
-    res = tasks.namp_scan.delay(zmap_list["ips"], zmap_list["port"])
+    port= []
+    port.append(str(zmap_list["port"]))
+    res = tasks.namp_scan.delay(zmap_list["ips"], port)
     return JsonResponse({"status": "successful", 'task_id': res.task_id})
 
 
@@ -24,4 +26,5 @@ def get_res(request):
 
 def get_statues(request):
     id = request.GET.get("id")
-    return HttpResponse(AsyncResult(id).state)
+    state = AsyncResult(id).state
+    return HttpResponse(state)
