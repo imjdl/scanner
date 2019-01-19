@@ -143,3 +143,7 @@ class Banner(object):
         except Exception as e:
             pass
 
+
+if __name__ == '__main__':
+    b = Banner("http", "60.250.197.100", "80")
+    print(b.res)
