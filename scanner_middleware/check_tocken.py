@@ -33,6 +33,3 @@ class CheckTokenMiddleware(MiddlewareMixin):
                 return JsonResponse({"status": "failure", "info": "You have not installed!"}, status=403)
             if objects[0].token != token:
                 return JsonResponse({"status": "failure", "info": "verification failed"}, status=401)
-
-
-
