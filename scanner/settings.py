@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'scanner_zmap',
     'scanner_nmap',
-    'rest_framework',
+    'scanner_vul',
+    'install',
 ]
 
 MIDDLEWARE = [
