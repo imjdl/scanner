@@ -8,3 +8,10 @@
 @time: 19-1-25 下午2:45
 @desc:
 '''
+
+from django.conf.urls import url, include
+from install.views import install
+
+urlpatterns = [
+    url(r"^$", install, name="install"),
+]

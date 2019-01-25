@@ -20,6 +20,7 @@ from django.conf.urls import url, include
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
+    path('install/', include(('install.urls', 'install'), namespace='install')),
     path('nmap/', include(('scanner_nmap.urls', 'scanner_nmap'), namespace="scanner_nmap")),
     path('zmap/', include(('scanner_zmap.urls', 'scanner_zmap'), namespace="scanner_zmap")),
 ]
