@@ -4,7 +4,7 @@
 @author: elliot
 @contact: imelloit@gmail.com
 @software: PyCharm
-@file: elastic.py
+@file: elastic_server.py
 @time: 19-1-17 下午1:25
 @desc: ELK API CRUD
 ElasticSearch 的操作

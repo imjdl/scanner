@@ -11,6 +11,7 @@ from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
 from common.scannererror.Error import ZmapNotFound
+from common.elastic.elastic_ip import es_elasticsearch
 
 
 @shared_task
@@ -19,6 +20,8 @@ def syn_scan(hosts, port):
     try:
         zmap = Zmap()
         res = zmap.syn_scan(ips=hosts, port=port)
+        es = es_elasticsearch()
+        es.bulk(datas=res, task_id=syn_scan.request_id, scan_type="syn")
     except ZmapNotFound as e:
         return {}
     return res

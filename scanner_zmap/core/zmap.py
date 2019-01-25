@@ -45,7 +45,7 @@ class Zmap(object):
 
 if __name__ == '__main__':
     # print(Zmap().syn_scan(ips="115.129.133.107/24", port=53))
-    print(Zmap().udp_scan(ips="204.197.245.142/24", port=53))
+    print(Zmap().syn_scan(ips="107.182.235.240/24", port=80))
     #  check_output() return bytes. we can decode to str
     #  but we stall to use Popen
     #  Popen() return a Process, we cat set stdout an stderror
