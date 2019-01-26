@@ -20,6 +20,10 @@ def syn_scan(hosts, port):
     try:
         zmap = Zmap()
         res = zmap.syn_scan(ips=hosts, port=port)
+        try:
+            res["ips"].remove("")
+        except Exception as e:
+            pass
         es = es_elasticsearch()
         es.bulk(datas=res, task_id=syn_scan.request.id, scan_type="syn")
     except ZmapNotFound as e:
@@ -33,6 +37,12 @@ def udp_scan(hosts, port):
     try:
         zmap = Zmap()
         res = zmap.udp_scan(ips=hosts, port=port)
+        try:
+            res["ips"].remove("")
+        except Exception as e:
+            pass
+        es = es_elasticsearch()
+        es.bulk(datas=res, task_id=syn_scan.request.id, scan_type="udp")
     except ZmapNotFound as e:
         return {}
     return res

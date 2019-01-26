@@ -52,12 +52,14 @@ class es_elasticsearch(object):
             data = {
                 "_index": IP_INDEX_NAME,
                 "_type": IP_DOC_TYPE,
-                "_id": port + "_" + port + "_" + scan_type,
+                "_id": ip + "_" + port + "_" + scan_type,
                 "TASK_ID": task_id,
                 "HOST": ip,
                 "PORT": port,
                 "SCAN_TYPE": scan_type,
                 "SCAN_DATE": time.strftime("%Y-%m-%d")
             }
+            print(data)
             actions.append(data)
+        print(actions)
         bulk(client=self.es, actions=actions, index=self.index_name, doc_type=self.doc_type)
