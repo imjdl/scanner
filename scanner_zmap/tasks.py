@@ -21,7 +21,7 @@ def syn_scan(hosts, port):
         zmap = Zmap()
         res = zmap.syn_scan(ips=hosts, port=port)
         es = es_elasticsearch()
-        es.bulk(datas=res, task_id=syn_scan.request_id, scan_type="syn")
+        es.bulk(datas=res, task_id=syn_scan.request.id, scan_type="syn")
     except ZmapNotFound as e:
         return {}
     return res
