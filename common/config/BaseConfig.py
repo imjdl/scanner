@@ -5,19 +5,13 @@ __doc__= '''
 @contact: imelloit@gmail.com
 @software: PyCharm
 @file: BaseConfig.py
-@time: 19-1-17 下午2:08
 @desc:
-****************************
-扫描器的一些配置选项。
-以后可以存储在数据库中
-****************************
 '''
 
 
-# 搜索引擎ES配置
 ELASTICSEARCH_HOST_LIST = [{"host": "127.0.0.1", "port": 9200}]
 
-# IP扫描ES配置
+# IP SCANNER ES CONFIG
 IP_INDEX_NAME = "searchip"
 IP_DOC_TYPE = "search"
 IP_SERACH_MAPPING = {
@@ -48,7 +42,7 @@ IP_SERACH_MAPPING = {
     }
 }
 
-# 服务扫描ES配置
+# Server SCANNER ES CONFIG
 ES_INDEX_NAME = "searchdb"
 ES_DOC_TYPE = "search"
 ES_SEARCH_MAPPING = {
@@ -138,7 +132,7 @@ ES_SEARCH_MAPPING = {
     }
 }
 
-# 漏洞扫描ES配置
+# VUL SCANNER ES CONFIG
 
 VUL_INDEX_NAME = "searchvul"
 VUL_DOC_TYPE = "search"

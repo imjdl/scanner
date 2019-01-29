@@ -1,10 +1,12 @@
-__doc__ = '''
+#!/usr/bin/env python
+# coding = UTF-8
+
+_doc__ = '''
 @author: elliot
 @contact: imelloit@gmail.com
 @software: PyCharm
-@file: nmap.py
-@time: 19-1-3 下午11:28
-@desc: nmap 的基础模块，在zmap基础之上，进行端口的服务探测
+@file: sc_nmap.py
+@desc:
 {
   "106.15.200.166_80":
     {
@@ -40,7 +42,7 @@ from nmap.nmap import PortScanner
 from common.banner.banner import Banner
 from common.IPlocate.ipinfo import IPInfo
 import time
-import queue
+import Queue as queue
 import json
 
 tasks = queue.Queue()
@@ -49,12 +51,6 @@ tasks = queue.Queue()
 class sc_nmap():
 
     def __init__(self, ips=None, ports=None):
-        '''
-        传入要扫描的ip列表和端口列表,
-        ports为空时表示全端口扫描
-        :param ips:dict
-        :param ports:dict
-        '''
         # self.ips = " ".join(ips) if ips != None else None
         self.ports = ",".join(ports) if ports != None else None
         self.results = []
@@ -63,11 +59,10 @@ class sc_nmap():
 
     def scan_ip_port(self):
         """
-        如：
         nmap -sv -Pn 192.168.1.1 192.168.1.2 -p 80
         nmap -sV -Pn 192.168.1.1 192.168.1.2 -p 22,80,6379
         nmap -sV -Pn 192.168.1.1 192.168.1.2
-        :return: 列表
+        :return: list
         """
         gevent.joinall([
             gevent.spawn(self._scan),
@@ -93,9 +88,8 @@ class sc_nmap():
 
     def _get_res(self, nmap_obj):
         '''
-        传入一个nmap对象，解析扫描结果
-        :param nmap_obj: nmap对象
-        :return: 列表
+        :param nmap_obj: nmap object
+        :return: list
         '''
         hosts = nmap_obj.all_hosts()
         for host in hosts:
@@ -133,19 +127,3 @@ class sc_nmap():
             return {"state_code": "", "headers": "", "title": "", "content": "", "banner": ""}
         b = Banner(name=name, host=host, port=port)
         return b.res
-
-
-# if __name__ == '__main__':
-#     s = sc_nmap(["10.17.31.242", "106.15.200.166"], ['80'])
-#     res = s.scan_ip_port()
-#     from common.elastic.elastic import es_elasticsearch
-#     es = es_elasticsearch()
-#     es.bulk(res)
-    # import json
-    # for r in res:
-    #     for key, value in r.items():
-    #         print(key)
-    #         print(value)
-    # with open("res.json", "a") as f:
-    #     for r in res:
-    #         f.write(json.dumps(r) + "\n")

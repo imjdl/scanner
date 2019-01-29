@@ -1,4 +1,6 @@
-from django.shortcuts import render
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.http import HttpResponse, JsonResponse
 from . import tasks
 from celery.result import AsyncResult
@@ -11,7 +13,7 @@ def index(request):
     zmap_list = AsyncResult(zmap_task_id).get()
     port= []
     port.append(str(zmap_list["port"]))
-    res = tasks.namp_scan.delay(zmap_list["ips"], port)
+    res = tasks.nmap_scan.delay(zmap_list["ips"], port)
     return JsonResponse({"status": "successful", 'task_id': res.task_id})
 
 

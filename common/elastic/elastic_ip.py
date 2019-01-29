@@ -5,7 +5,6 @@
 @contact: imelloit@gmail.com
 @software: PyCharm
 @file: elastic_ip.py
-@time: 19-1-25 上午10:47
 @desc:
 '''
 
@@ -29,21 +28,19 @@ class es_elasticsearch(object):
 
     def _create_mapping(self):
         """
-        创建mapping
+        create mapping
         """
         try:
             if not self.es.indices.exists(index=self.index_name):
                 self.es.indices.create(index=self.index_name, body=IP_SERACH_MAPPING)
         except ConnectionError as e:
-            print("ConnectionERROR: 请检查你的配置文件")
+            print "ConnectionERROR"
 
     def bulk(self, datas, task_id, scan_type):
         """
-        批量导入
+        bulk import
         """
-        # 判断 index 是否存在
         if not self.es.indices.exists(self.index_name):
-            print("索引不存在，请先创建索引")
             return False
         actions = []
         ips = datas["ips"]
@@ -59,7 +56,5 @@ class es_elasticsearch(object):
                 "SCAN_TYPE": scan_type,
                 "SCAN_DATE": time.strftime("%Y-%m-%d")
             }
-            print(data)
             actions.append(data)
-        print(actions)
         bulk(client=self.es, actions=actions, index=self.index_name, doc_type=self.doc_type)

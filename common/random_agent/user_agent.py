@@ -3,7 +3,6 @@ __doc__ = '''
 @contact: imelloit@gmail.com
 @software: PyCharm
 @file: user_agent.py
-@time: 19-1-8 下午6:52
 @desc:
 '''
 import os

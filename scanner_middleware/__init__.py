@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 # coding = UTF-8
 '''
-@author: elliot
+@author:
+     _ _       _ _   
+  ___| | | ___ (_) |_ 
+ / _ \ | |/ _ \| | __|
+|  __/ | | (_) | | |_ 
+ \___|_|_|\___/|_|\__|
+ 
 @contact: imelloit@gmail.com
 @software: PyCharm
 @file: __init__.py.py
-@time: 19-1-25 下午4:46
 @desc:
+
 '''

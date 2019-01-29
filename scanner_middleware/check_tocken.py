@@ -1,13 +1,20 @@
 #!/usr/bin/env python
 # coding = UTF-8
 '''
-@author: elliot
+@author:
+     _ _       _ _   
+  ___| | | ___ (_) |_ 
+ / _ \ | |/ _ \| | __|
+|  __/ | | (_) | | |_ 
+ \___|_|_|\___/|_|\__|
+ 
 @contact: imelloit@gmail.com
 @software: PyCharm
 @file: check_tocken.py
-@time: 19-1-25 下午4:47
 @desc:
+
 '''
+
 from install.models import Scanner
 from django.utils.deprecation import MiddlewareMixin
 from django.http import JsonResponse
@@ -15,10 +22,9 @@ from django.http import JsonResponse
 
 class CheckTokenMiddleware(MiddlewareMixin):
     """
-    对所有操作进行，权限认证，包括一下情况：
-    1、scanner尚未安装
-    2、url中没有提供token
-    3、url中的token不正确
+    1. scanner not install
+    2. url not token
+    3. token is error
     """
 
     def process_request(self, request):

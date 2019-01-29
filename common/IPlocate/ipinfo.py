@@ -3,8 +3,7 @@ __doc__ = '''
 @contact: imelloit@gmail.com
 @software: PyCharm
 @file: ipinfo.py
-@time: 19-1-9 下午1:42
-@desc: 获取IP的信息
+@desc: get IP info
 '''
 
 import geoip2.database
@@ -33,7 +32,6 @@ class IPInfo(object):
             ip_data["city"] = response.city.name
             return ip_data
         except Exception as e:
-            # 局域网IP不在数据库中
             ip_data = {}
             ip_data["location"] = {}
             ip_data["location"]["latitude"] = 0

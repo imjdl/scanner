@@ -5,9 +5,7 @@
 @contact: imelloit@gmail.com
 @software: PyCharm
 @file: elastic_server.py
-@time: 19-1-17 下午1:25
 @desc: ELK API CRUD
-ElasticSearch 的操作
 os:linux;app:wordpress;ip:210.43.32.32/16;
 '''
 
@@ -29,21 +27,19 @@ class es_elasticsearch(object):
 
     def _create_mapping(self):
         """
-        创建mapping
+        create mapping
         """
         try:
             if not self.es.indices.exists(index=self.index_name):
                 self.es.indices.create(index=self.index_name, body=ES_SEARCH_MAPPING)
         except ConnectionError as e:
-            print("ConnectionERROR: 请检查你的配置文件")
+            print "ConnectionERROR"
 
     def bulk(self, datas):
         """
-        批量导入
+        bulk import
         """
-        # 判断 index 是否存在
         if not self.es.indices.exists(self.index_name):
-            print("索引不存在，请先创建索引")
             return False
         actions = []
         for data in datas:

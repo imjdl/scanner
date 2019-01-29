@@ -1,10 +1,10 @@
-__doc__ = '''
+'''
 @author: elliot
 @contact: imelloit@gmail.com
 @software: PyCharm
 @file: banner.py
-@time: 19-1-8 下午6:02
-@desc: 获取WEB指纹
+@time: 19-1-8
+@desc: Get WEB BANNER
 '''
 import gevent.monkey
 gevent.monkey.patch_all()
@@ -12,7 +12,7 @@ import gevent
 import requests
 import os
 import re
-import queue
+import Queue as queue
 
 from common.random_agent.user_agent import random_agent
 
@@ -75,7 +75,7 @@ class Banner(object):
 
     def read_fingerprint(self):
         '''
-        web指纹库， 现在先从文件中读取，往后可扩展为从数据库中读取，同时用户可以提交。
+        Web Banner
         :return:
         '''
         path = os.path.dirname(os.path.abspath(__file__)) + "/fingerprint.txt"
@@ -146,4 +146,4 @@ class Banner(object):
 
 if __name__ == '__main__':
     b = Banner("http", "60.250.197.100", "80")
-    print(b.res)
+    print b.res

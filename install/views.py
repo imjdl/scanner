@@ -1,10 +1,10 @@
-from django.http import JsonResponse, HttpResponse
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+from django.http import JsonResponse
 import hashlib
 import os
 
 from .models import Scanner
-
-# Create your views here.
 
 
 def install(requests):
@@ -24,4 +24,3 @@ def install(requests):
         s = Scanner(token=token)
         s.save()
         return JsonResponse(data={"status": "success", "info": token}, status=200)
-

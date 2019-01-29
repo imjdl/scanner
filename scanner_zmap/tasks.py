@@ -1,10 +1,18 @@
+#!/usr/bin/env python
+# coding = UTF-8
 '''
-@author: elliot
+@author:
+     _ _       _ _   
+  ___| | | ___ (_) |_ 
+ / _ \ | |/ _ \| | __|
+|  __/ | | (_) | | |_ 
+ \___|_|_|\___/|_|\__|
+ 
 @contact: imelloit@gmail.com
 @software: PyCharm
 @file: tasks.py
-@time: 19-1-4 下午5:04
 @desc:
+
 '''
 
 from __future__ import absolute_import, unicode_literals

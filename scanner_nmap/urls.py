@@ -1,17 +1,19 @@
-__doc__ = '''
+#!/usr/bin/env python
+# coding = UTF-8
+'''
 @author: elliot
 @contact: imelloit@gmail.com
 @software: PyCharm
 @file: urls.py
-@time: 19-1-4 下午5:16
 @desc:
 '''
 
-from django.conf.urls import url, include
+from django.conf.urls import url
 from scanner_nmap import views
 
 urlpatterns = [
-    url(r"^res/", views.get_res, name="get"),
-    url(r'^state/', views.get_statues, name="state"),
-    url(r"^$", views.index, name="index"),
+    url("^res/", views.get_res, name="get"),
+    url('^state/', views.get_statues, name="state"),
+    url("^", views.index, name="index"),
 ]
+
