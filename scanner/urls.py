@@ -18,5 +18,6 @@ from django.conf.urls import url, include
 urlpatterns = [
     url('nmap/', include("scanner_nmap.urls")),
     url('zmap/', include("scanner_zmap.urls")),
+    url('vul/', include("scanner_vul.urls")),
     url('install/', include("install.urls")),
 ]

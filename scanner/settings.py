@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "scanner_nmap",
     "scanner_zmap",
-    # "scanner_vul",
+    "scanner_vul",
     "install"
 ]
 
