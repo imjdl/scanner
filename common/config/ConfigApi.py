@@ -109,5 +109,5 @@ class ConfigAPI:
 
 
 if __name__ == '__main__':
-    # print ConfigAPI().set_es_config(hosts=["192.168.1.1", "192.168.1.2"])
-    print ConfigAPI().get_es_config()
+    print ConfigAPI().set_es_config(hosts=["127.0.0.1"])
+    # print ConfigAPI().get_es_config()
