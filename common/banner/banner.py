@@ -1,149 +1,90 @@
+#!/usr/bin/env python
+# coding = UTF-8
 '''
-@author: elliot
+@author:
+     _ _       _ _   
+  ___| | | ___ (_) |_ 
+ / _ \ | |/ _ \| | __|
+|  __/ | | (_) | | |_ 
+ \___|_|_|\___/|_|\__|
+ 
 @contact: imelloit@gmail.com
 @software: PyCharm
 @file: banner.py
-@time: 19-1-8
-@desc: Get WEB BANNER
+@desc:
+
 '''
-import gevent.monkey
-gevent.monkey.patch_all()
-import gevent
-import requests
-import os
+
 import re
-import Queue as queue
-
-from common.random_agent.user_agent import random_agent
-
-tasks = queue.Queue()
+import requests
 
 
-class Banner(object):
-
-    def __init__(self, name, host, port):
-
-        if name != "https":
-            self.url = "http://" + host + ":" + str(port)
+class Banner():
+    """
+    1. http Server X-Powered-By
+    2. meta
+    """
+    def __init__(self, host, prot, protocol):
+        if protocol == "https":
+            self.url = "https://" + host + ":" + prot
         else:
-            self.url = "https://" + host + ":" + str(port)
-        self.code = '0'
-        self.content, self.headers = self._get_text_header()
-        self.res = {}
-        self.res["banner"] = set()
-        self.read_fingerprint()
-        gevent.joinall([
-            gevent.spawn(self.get_banner),
-            gevent.spawn(self.get_banner),
-            gevent.spawn(self.get_banner),
-            gevent.spawn(self.get_banner),
-            gevent.spawn(self.get_banner),
-            gevent.spawn(self.get_banner),
-            gevent.spawn(self.get_banner),
-            gevent.spawn(self.get_banner),
-            gevent.spawn(self.get_banner),
-            gevent.spawn(self.get_banner),
-            gevent.spawn(self.get_banner),
-        ])
-        self.res["state_code"] = self.code
-        self.res["headers"] = self._dict_str(self.headers)
-        self.res["title"] = self.get_title()
-        self.res["content"] = self.content
-        self.res["banner"] = "  ".join(list(self.res["banner"]))
+            self.url = "http://" + host + ":" + prot
+
+    def run(self):
+        res = {}
+        try:
+            r = requests.request("get", self.url, headers={"UserAgent": "Mozilla/5.0"}, timeout=(10, 15), verify=False)
+            content = r.content.decode(r.apparent_encoding)
+            # title
+            regular = re.compile("<title>[\s\S]*?</title>")
+            titles = regular.findall(content)
+            title = ":::".join(titles)
+            title = title.replace("<title>", "").replace("</title>", "")
+            # Server
+            # X-Powered-By
+            if "Server" in r.headers:
+                server = r.headers["Server"]
+            else:
+                server = ""
+            if "X-Powered-By" in r.headers:
+                xpoweredby = r.headers["X-Powered-By"]
+            else:
+                xpoweredby = ""
+
+            # meta
+            generator_info = re.compile(r'<meta name="generator" content="(.+)" />')
+            author_info = re.compile(r'<meta name="author" content="(.+)" />')
+            web_type = generator_info.findall(content)
+            if web_type == []:
+                web_type = author_info.findall(content)
+            if web_type == []:
+                web_type = ""
+            else:
+                web_type = web_type[0]
+
+            res["state_code"] = r.status_code
+            res["headers"] = self._dict_str(r.headers)
+            res["title"] = title
+            res["content"] = content
+            res["banner"] = server + "::" + xpoweredby + "::" + web_type
+        except Exception:
+            res["state_code"] = 0
+            res["headers"] = ""
+            res["title"] = ""
+            res["content"] = ""
+            res["banner"] = ""
+        return res
 
     def _dict_str(self, dict_obj):
         if dict_obj == None:
             return ""
         res = []
-        res.append("Code: " + self.code)
         for key, value in dict_obj.items():
             res.append(key + " : "+value)
         res = "\n".join(res)
         return res
 
-    def _get_text_header(self):
-        header = {
-            "User-Agent": random_agent(),
-        }
-        try:
-            res = requests.get(url=self.url, headers=header, timeout=(10, 15), verify=False)
-            res.encoding = res.apparent_encoding
-            self.code = str(res.status_code)
-            return res.text, res.headers
-        except Exception as e:
-            return None, None
-
-    def read_fingerprint(self):
-        '''
-        Web Banner
-        :return:
-        '''
-        path = os.path.dirname(os.path.abspath(__file__)) + "/fingerprint.txt"
-        with open(path, "r") as f:
-            res = f.readlines()
-            mark_list = []
-            for line in res:
-                if re.match("\[.*?\]|^;", line) or not line.split():
-                    continue
-                name, location, key, value = line.strip().split("|", 3)
-                mark_list.append([name, location, key, value])
-            for mark in mark_list:
-                tasks.put(mark)
-
-    def get_title(self):
-        try:
-            regular = re.compile("<title>[\s\S]*?</title>")
-            titles = regular.findall(self.content)
-            title = ":::".join(titles)
-            title = title.replace("<title>", "").replace("</title>", "")
-            return title
-        except Exception as e:
-            return ""
-
-    def get_banner(self):
-        while not tasks.empty():
-            mark_info = tasks.get()
-            name, discern_type, key, reg = mark_info
-            if discern_type == 'headers':
-                self.discern_from_header(name, discern_type, key, reg)
-            elif discern_type == 'index':
-                self.discern_from_index(name, discern_type, key, reg)
-            elif discern_type == "url":
-                self.discern_from_url(name, discern_type, key, reg)
-            else:
-                pass
-
-    def discern_from_header(self, name, discern_type, key, reg):
-        try:
-            if "X-Powered-By" in self.headers:
-                self.res["banner"].add(self.headers["X-Powered-By"])
-            if key in self.headers and (re.search(reg, self.headers[key], re.I)):
-                self.res["banner"].add(name)
-            else:
-                pass
-        except Exception as e:
-            pass
-
-    def discern_from_index(self, name, discern_type, key, reg):
-        try:
-            if re.search(reg, self.content, re.I):
-                self.res["banner"].add(name)
-            else:
-                pass
-        except Exception as e:
-            pass
-
-    def discern_from_url(self, name, discern_type, key, reg):
-        try:
-            result = requests.get(self.url + key, timeout=15, verify=False)
-            if re.search(reg, result.content, re.I):
-                self.res["banner"].add(name)
-            else:
-                pass
-        except Exception as e:
-            pass
-
 
 if __name__ == '__main__':
-    b = Banner("http", "60.250.197.100", "80")
-    print b.res
+    g = Banner("106.15.200.166", "80", "http")
+    print g.run()

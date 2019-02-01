@@ -116,14 +116,15 @@ class sc_nmap():
                                 info["extrainfo"] = nmap_obj[host][protocol][key]["extrainfo"]
                             except:
                                 info["extrainfo"] = ""
-                            info = dict(info, **self._get_banner(name=name, host=host, port=key))
+                            info = dict(info, **self._get_banner(host=host, prot=key, name=name))
                             info = dict(info, **IPInfo(host).get_city())
                             id = host + "_" + str(key)
                             data[id] = info
                             self.results.append(data)
 
-    def _get_banner(self, name, host, port):
+    def _get_banner(self, name, host, prot):
+        prot = str(prot)
         if "http" not in name:
             return {"state_code": "", "headers": "", "title": "", "content": "", "banner": ""}
-        b = Banner(name=name, host=host, port=port)
-        return b.res
+        b = Banner(host=host, prot=prot, protocol=name)
+        return b.run()
