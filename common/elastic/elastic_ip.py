@@ -54,7 +54,7 @@ class es_elasticsearch(object):
                 "HOST": ip,
                 "PORT": port,
                 "SCAN_TYPE": scan_type,
-                "SCAN_DATE": time.strftime("%Y-%m-%d")
+                "SCAN_DATE": time.strftime("%Y-%m-%d %H:%M:%S")
             }
             actions.append(data)
         bulk(client=self.es, actions=actions, index=self.index_name, doc_type=self.doc_type)

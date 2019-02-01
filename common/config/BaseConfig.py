@@ -35,7 +35,8 @@ IP_SERACH_MAPPING = {
                     "type": "keyword"
                 },
                 "SCAN_DATE": {
-                    "type": "keyword"
+                    "type": "date",
+                    "format": "yyyy-MM-dd HH:mm:ss"
                 }
             }
         }
