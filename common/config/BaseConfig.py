@@ -64,7 +64,8 @@ ES_SEARCH_MAPPING = {
                     "type": "integer"
                 },
                 "DATE": {
-                    "type": "keyword"
+                    "type": "date",
+                    "format": "yyyy-MM-dd HH:mm:ss"
                 },
                 "VENDOR": {
                     "type": "text",

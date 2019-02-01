@@ -104,7 +104,7 @@ class sc_nmap():
                             info["host"] = host
                             info["protocol"] = protocol + ":" + name
                             info["port"] = key
-                            info["date"] = time.strftime("%Y-%m-%d")
+                            info["date"] = time.strftime("%Y-%m-%d %H:%M:%S")
                             info["vendor"] = json.dumps(nmap_obj[host]["vendor"])
                             try:
                                 info["OS"] = nmap_obj[host]["osmatch"][0]["name"]
