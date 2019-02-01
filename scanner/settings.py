@@ -125,12 +125,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # CELERY SETTINGS
-
+from common.config.BaseConfig import CELERY_RESULT_BACKEND, CELERY_BROKER_URL
 # CELERY_BROKER_URL = 'redis://10.17.36.135:6379/0'
-CELERY_BROKER_URL = 'redis://:redispassword@demo.com:6379/0'
+# CELERY_BROKER_URL = 'redis://:redispassword@demo.com:6379/0'
+CELERY_BROKER_URL = CELERY_BROKER_URL
 
 # CELERY_RESULT_BACKEND = 'redis://10.17.36.135:6379/0'
-CELERY_RESULT_BACKEND = 'redis://:redispassword@demo.com:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://:redispassword@demo.com:6379/0'
+CELERY_RESULT_BACKEND = CELERY_RESULT_BACKEND
 
 CELERY_RESULT_SERIALIZER = 'json'
 

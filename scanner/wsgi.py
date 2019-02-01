@@ -1,5 +1,5 @@
 """
-WSGI config for scanner project.
+WSGI config.xml for scanner project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

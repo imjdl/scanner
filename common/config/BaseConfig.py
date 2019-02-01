@@ -7,9 +7,13 @@ __doc__= '''
 @file: BaseConfig.py
 @desc:
 '''
+from ConfigApi import ConfigAPI
 
+config = ConfigAPI()
 
-ELASTICSEARCH_HOST_LIST = [{"host": "127.0.0.1", "port": 9200}]
+# ES CONFIG
+
+ELASTICSEARCH_HOST_LIST = config.get_es_config()
 
 # IP SCANNER ES CONFIG
 IP_INDEX_NAME = "searchip"
@@ -139,3 +143,9 @@ ES_SEARCH_MAPPING = {
 VUL_INDEX_NAME = "searchvul"
 VUL_DOC_TYPE = "search"
 VUL_SERACH_MAPPING = {}
+
+# CELERY SETTINGS
+
+CELERY_BROKER_URL = config.get_borker_url()
+
+CELERY_RESULT_BACKEND = config.get_backend_url()
