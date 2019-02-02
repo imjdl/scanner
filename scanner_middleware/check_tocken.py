@@ -30,7 +30,7 @@ class CheckTokenMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if '/' == request.path:
             return JsonResponse({"status": "failure", "info": ""}, status=404)
-        if "install" not in request.path:
+        if "install" != request.path.split("/")[1]:
             token = request.GET.get("token")
             if token == None:
                 return JsonResponse({"status": "failure", "info": "You must issue a certificate!"}, status=401)
