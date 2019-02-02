@@ -33,7 +33,7 @@ class Banner():
     def run(self):
         res = {}
         try:
-            r = requests.request("get", self.url, headers={"UserAgent": "Mozilla/5.0"}, timeout=(10, 15), verify=False)
+            r = requests.request("get", self.url, headers={"UserAgent": "Mozilla/5.0"}, timeout=10, verify=False)
             content = r.content.decode(r.apparent_encoding)
             # title
             regular = re.compile("<title>[\s\S]*?</title>")
