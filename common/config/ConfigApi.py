@@ -54,8 +54,8 @@ class ConfigAPI:
             USER.text = user
             PASSWD = etree.SubElement(es, "PASS")
             PASSWD.text = passwd
-        with open(self.path, "w") as f:
-            f.write(etree.tostring(self.root))
+        # with open(self.path, "w") as f:
+        #     f.write(etree.tostring(self.root))
 
     def get_borker_url(self):
         """
@@ -79,8 +79,8 @@ class ConfigAPI:
         BORKER[3].text = USER
         BORKER[4].text = PASS
         BORKER[5].text = DB
-        with open(self.path, "w") as f:
-            f.write(etree.tostring(self.root))
+        # with open(self.path, "w") as f:
+        #     f.write(etree.tostring(self.root))
 
     def get_backend_url(self):
         """
@@ -104,6 +104,9 @@ class ConfigAPI:
         BACKEND[3].text = USER
         BACKEND[4].text = PASS
         BACKEND[5].text = DB
+
+
+    def save(self):
         with open(self.path, "w") as f:
             f.write(etree.tostring(self.root))
 
