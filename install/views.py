@@ -1,4 +1,19 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+'''
+@author:
+     _ _       _ _
+  ___| | | ___ (_) |_
+ / _ \ | |/ _ \| | __|
+|  __/ | | (_) | | |_
+ \___|_|_|\___/|_|\__|
+
+@contact: imelloit@gmail.com
+@software: PyCharm
+@file: urls.py
+@desc:
+'''
+
 from __future__ import unicode_literals
 from django.http import JsonResponse
 import hashlib
@@ -6,12 +21,11 @@ import os
 
 from .models import Scanner
 from common.config.ConfigApi import ConfigAPI
+from common.celeryserver.celeryserver import CeleryServer
 
 
 def install(requests):
     '''
-    安装扫描器，在产生token。
-    这里先配置token, 其他配置项，以后再添加
     :param requests:
     :return:
     '''
@@ -83,6 +97,12 @@ def install(requests):
         token = hashlib.sha1(os.urandom(24)).hexdigest()
         s = Scanner(token=token)
         s.save()
+        # start celery server
+        celeryserver = CeleryServer()
+        print celeryserver
+        if celeryserver.start() == False:
+            return JsonResponse(data={"status": "failure", "info": "Celery Service start failed"}, status=401)
+
         return JsonResponse(data={"status": "success", "info": token}, status=200)
 
 
