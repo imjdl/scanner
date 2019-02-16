@@ -103,6 +103,7 @@ class ConfigAPI:
 
     def save(self):
         with open(self.path, "w") as f:
+            print etree.tostring(self.root)
             f.write(etree.tostring(self.root))
 
 
