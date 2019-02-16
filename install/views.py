@@ -77,7 +77,8 @@ def install(requests):
         if params["backend_type"] == "amqp":
             if not connect_amqp(c.get_backend_url()):
                 return JsonResponse(data={"status": "failure", "info": "Backend Service connection failed"}, status=401)
-
+        # save config
+        c.save()
         # create token
         token = hashlib.sha1(os.urandom(24)).hexdigest()
         s = Scanner(token=token)
