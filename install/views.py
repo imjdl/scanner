@@ -22,6 +22,42 @@ import os
 from .models import Scanner
 from common.config.ConfigApi import ConfigAPI
 from common.celeryserver.celeryserver import CeleryServer
+celeryserver = CeleryServer()
+
+def celery_restart(requests):
+    global celeryserver
+    flag = celeryserver.restart()
+    if flag == False:
+        return JsonResponse(data={"status": "failure", "info": "Celery restart filed"}, status=401)
+    else:
+        return JsonResponse(data={"status": "success", "info": "Celery restart done"}, status=200)
+
+
+def celery_stop(requests):
+    global celeryserver
+    flag = celeryserver.stop()
+    if flag == False:
+        return JsonResponse(data={"status": "failure", "info": "Celery already stoped"}, status=401)
+    else:
+        return JsonResponse(data={"status": "success", "info": "Celery stop success"}, status=200)
+
+
+def celery_start(requests):
+    global celeryserver
+    flag = celeryserver.start()
+    if flag == False:
+        return JsonResponse(data={"status": "failure", "info": "Celery already runing"}, status=401)
+    else:
+        return JsonResponse(data={"status": "success", "info": "Celery start done"}, status=200)
+
+
+def celery_status(requests):
+    global celeryserver
+    flag = celeryserver.status()
+    if flag == True:
+        return JsonResponse(data={"status": "success", "info": "Celery already runing"}, status=200)
+    else:
+        return JsonResponse(data={"status": "success", "info": "Celery has stopped"}, status=200)
 
 
 def install(requests):
@@ -98,8 +134,8 @@ def install(requests):
         s = Scanner(token=token)
         s.save()
         # start celery server
-        celeryserver = CeleryServer()
-        print celeryserver
+        global celeryserver
+        celeryserver.check()
         if celeryserver.start() == False:
             return JsonResponse(data={"status": "failure", "info": "Celery Service start failed"}, status=401)
 

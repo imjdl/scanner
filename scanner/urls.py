@@ -14,10 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
+from install.views import celery_restart, celery_start, celery_status, celery_stop
 
 urlpatterns = [
     url('nmap/', include("scanner_nmap.urls")),
     url('zmap/', include("scanner_zmap.urls")),
     url('vul/', include("scanner_vul.urls")),
     url('install/', include("install.urls")),
+    url('celery-start/', celery_start, name="celery-start"),
+    url('celery-restart/', celery_restart, name="celery-retsrat"),
+    url('celery-stop/', celery_stop, name="celery-stop"),
+    url('celery-status/', celery_status, name="celery-status"),
 ]

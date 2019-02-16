@@ -18,12 +18,26 @@
 import subprocess
 import os
 import signal
+import threading
 
 
 class CeleryServer(object):
+    # thread safe
+    _instance_lock = threading.Lock()
 
     def __init__(self):
         self.PID = "/tmp/celery.pid"
+
+    def __new__(cls, *args, **kwargs):
+        if not hasattr(CeleryServer, "_instance"):
+            with CeleryServer._instance_lock:
+                if not hasattr(CeleryServer, "_instance"):
+                    CeleryServer._instance = object.__new__(cls)
+        return CeleryServer._instance
+
+    def check(self):
+        if os.path.exists(self.PID):
+            os.remove(self.PID)
 
     def start(self):
         # if aleryed runing
