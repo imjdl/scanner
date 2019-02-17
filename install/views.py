@@ -24,6 +24,7 @@ from common.config.ConfigApi import ConfigAPI
 from common.celeryserver.celeryserver import CeleryServer
 celeryserver = CeleryServer()
 
+
 def celery_restart(requests):
     global celeryserver
     flag = celeryserver.restart()
@@ -154,7 +155,7 @@ def connect_es(hosts):
 def connect_redis(host, port, passwd, db):
     from redis import Connection
     try:
-        c = Connection(host=host, port=port, password=passwd, db=db)
+        c = Connection(host=host, port=port, password=passwd, db=db, socket_timeout=15)
         c.connect()
         return True
     except Exception as e:
