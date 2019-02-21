@@ -1,0 +1,7 @@
+version: '2'
+services:
+        scanner:
+                build: .
+                ports:
+                 - "8080:8000"
+                command: python2.7 manage.py runserver 0.0.0.0:8000
