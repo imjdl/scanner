@@ -70,4 +70,13 @@ if __name__ == '__main__':
     with open('demo.csv', 'r') as f:
         targets = f.readlines()
     sc = sc_cannon(targets=targets, info=info, threads=100)
-    print sc.run()
+    res = sc.run()
+    for data in res:
+        url, pocname, pocid, appname, appversion, _, scan_date, evidence = data
+        print url
+        print pocname
+        print pocid
+        print appname
+        print appversion
+        print scan_date
+        print evidence

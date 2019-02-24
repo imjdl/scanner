@@ -14,8 +14,10 @@
 @desc:
 
 '''
+
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
+from common.elastic.elastic_vul import es_elasticsearch
 
 @shared_task
 def vul_scan(targets=[], poc_name=None, poc_string=None, mode='veirfy', params={}, headers={}, threads=10,
@@ -25,4 +27,6 @@ def vul_scan(targets=[], poc_name=None, poc_string=None, mode='veirfy', params={
                      threads=threads, timeout=timeout)
     res = sc.scan()
     # insert to es
+    es = es_elasticsearch()
+    es.bulk(res)
     return res

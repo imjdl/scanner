@@ -85,7 +85,7 @@ ES_SEARCH_MAPPING = {
                 "SERVER_VERSION": {
                     "type": "keyword"
                 },
-                "EXTRAINFO":{
+                "EXTRAINFO": {
                     "type": "text",
                     "analyzer": "ik_max_word"
                 },
@@ -142,7 +142,66 @@ ES_SEARCH_MAPPING = {
 
 VUL_INDEX_NAME = "searchvul"
 VUL_DOC_TYPE = "search"
-VUL_SERACH_MAPPING = {}
+VUL_SERACH_MAPPING = {
+    "settings": {
+        "number_of_replicas": 1,
+        "number_of_shards": 5
+    },
+    "mappings": {
+        VUL_DOC_TYPE: {
+            "properties": {
+                "URL": {
+                    "type": "keyword"
+                },
+                "POCNAME": {
+                    "type": "keyword"
+                },
+                "POCID": {
+                    "type": "keyword"
+                },
+                "APPNAME": {
+                    "type": "keyword"
+                },
+                "APPVERSION": {
+                    "type": "keyword"
+                },
+                "DATE": {
+                    "type": "date",
+                    "format": "yyyy-MM-dd HH:mm:ss"
+                },
+                "EVIDENCE": {
+                    "type": "text",
+                    "analyzer": "ik_max_word"
+                },
+                "LOCATION": {
+                    "properties": {
+                        "LATITUDE": {
+                            "type": "double"
+                        },
+                        "LOGITUDE": {
+                            "type": "double"
+                        },
+                    }
+                },
+                "TIME_ZONE": {
+                    "type": "keyword"
+                },
+                "CONTINENT": {
+                    "type": "keyword"
+                },
+                "COUNTRY": {
+                    "type": "keyword"
+                },
+                "PROVINCE": {
+                    "type": "keyword"
+                },
+                "CITY": {
+                    "type": "keyword"
+                }
+            }
+        }
+    }
+}
 
 # CELERY SETTINGS
 
