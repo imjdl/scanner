@@ -94,6 +94,9 @@ def install(requests):
             "backend_db": "",
 
         }
+        if requests.GET.items() == []:
+            return JsonResponse(data={"status": "failure", "info": "params is error"}, status=401)
+
         for key, value in requests.GET.items():
             if key not in params.keys():
                 return JsonResponse(data={"status": "failure", "info": "params is error"}, status=401)
