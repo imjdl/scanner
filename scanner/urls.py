@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import url, include
 from install.views import celery_restart, celery_start, celery_status, celery_stop
 
+from django.contrib import admin
+
 urlpatterns = [
     url('nmap/', include("scanner_nmap.urls")),
     url('zmap/', include("scanner_zmap.urls")),

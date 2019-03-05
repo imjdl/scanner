@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     "scanner_nmap",
     "scanner_zmap",
     "scanner_vul",
-    "install"
+    "install",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -136,3 +137,10 @@ CELERY_RESULT_BACKEND = CELERY_RESULT_BACKEND
 
 CELERY_RESULT_SERIALIZER = 'json'
 
+CELERY_ENABLE_UTC = False
+
+CELERY_TIMEZONE = "Asia/Shanghai"
+
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+CELERYD_MAX_TASKS_PER_CHILD = 3
