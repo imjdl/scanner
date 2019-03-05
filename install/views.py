@@ -22,12 +22,15 @@ import os
 from .models import Scanner
 from common.config.ConfigApi import ConfigAPI
 from common.celeryserver.celeryserver import CeleryServer
+from common.celerybeatserver.celerybeatserver import CeleryBeatServer
 celeryserver = CeleryServer()
+celerybeatserver = CeleryBeatServer()
 
 
 def celery_restart(requests):
     global celeryserver
     flag = celeryserver.restart()
+    celerybeatserver.restart()
     if flag == False:
         return JsonResponse(data={"status": "failure", "info": "Celery restart filed"}, status=401)
     else:
@@ -37,6 +40,7 @@ def celery_restart(requests):
 def celery_stop(requests):
     global celeryserver
     flag = celeryserver.stop()
+    celerybeatserver.stop()
     if flag == False:
         return JsonResponse(data={"status": "failure", "info": "Celery already stoped"}, status=401)
     else:
@@ -46,6 +50,7 @@ def celery_stop(requests):
 def celery_start(requests):
     global celeryserver
     flag = celeryserver.start()
+    celerybeatserver.start()
     if flag == False:
         return JsonResponse(data={"status": "failure", "info": "Celery already runing"}, status=401)
     else:
@@ -139,9 +144,12 @@ def install(requests):
         s.save()
         # start celery server
         global celeryserver
+        global celerybeatserver
         celeryserver.check()
         if celeryserver.start() == False:
             return JsonResponse(data={"status": "failure", "info": "Celery Service start failed"}, status=401)
+        else:
+            celerybeatserver.start()
 
         return JsonResponse(data={"status": "success", "info": token}, status=200)
 
