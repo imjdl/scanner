@@ -44,3 +44,8 @@ class Zmap(object):
         res["port"] = port
         res["ips"] = ipres
         return res
+
+if __name__ == '__main__':
+    # print Zmap().syn_scan(ips="210.43.32.30/16", port=80)
+    # print Zmap().syn_scan(ips="96.45.186.226/24", port=80)
+    print Zmap().syn_scan(ips="106.15.200.166/24", port=80)

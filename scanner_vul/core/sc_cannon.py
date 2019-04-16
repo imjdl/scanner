@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# coding = UTF-8
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 '''
 @author:
      _ _       _ _
@@ -63,7 +63,7 @@ class sc_cannon(object):
 
 
 if __name__ == '__main__':
-    info = {"pocname": "demo",
+    info = {"pocname": "TPLINK AC1750路由器默认弱口令",
             "pocstring": open("demo.py", 'r').read(),
             "mode": "verify"
             }

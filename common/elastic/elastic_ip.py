@@ -32,6 +32,10 @@ class es_elasticsearch(object):
         """
         try:
             if not self.es.indices.exists(index=self.index_name):
+                print "*"*100
+                print self.index_name
+                print IP_SERACH_MAPPING
+                print "++++"*100
                 self.es.indices.create(index=self.index_name, body=IP_SERACH_MAPPING)
         except ConnectionError as e:
             print "ConnectionERROR"
