@@ -28,10 +28,17 @@ class CheckTokenMiddleware(MiddlewareMixin):
     """
 
     def process_request(self, request):
+        allow_method = ["GET", "POST"]
         if '/' == request.path:
             return JsonResponse({"status": "failure", "info": ""}, status=404)
         if "install" != request.path.split("/")[1]:
-            token = request.GET.get("token")
+            method = request.method
+            if method not in allow_method:
+                return JsonResponse({"status": "failure", "info": "You must request GET or POST!"}, status=401)
+            if method == 'GET':
+                token = request.GET.get("token")
+            else:
+                token = request.POST.get("token")
             if token == None:
                 return JsonResponse({"status": "failure", "info": "You must issue a certificate!"}, status=401)
             objects = Scanner.objects.all()

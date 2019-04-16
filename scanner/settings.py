@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'scanner_middleware.check_tocken.CheckTokenMiddleware',
+    'scanner_middleware.check_tocken.CheckTokenMiddleware',
 ]
 
 ROOT_URLCONF = 'scanner.urls'
