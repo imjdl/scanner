@@ -30,28 +30,28 @@ PEROID_CHOICE = {
 }
 
 
-def get_tasks(request):
-    from django_celery_beat.admin import TaskSelectWidget
-    tasks = list(TaskSelectWidget().tasks_as_choices())
-    res = {"tasks": []}
-    for task in tasks:
-        data, _ = task
-        if data != "":
-            res["tasks"].append(data)
-    return JsonResponse(data=res, status=200)
+# def get_tasks(request):
+#     from django_celery_beat.admin import TaskSelectWidget
+#     tasks = list(TaskSelectWidget().tasks_as_choices())
+#     res = {"tasks": []}
+#     for task in tasks:
+#         data, _ = task
+#         if data != "":
+#             res["tasks"].append(data)
+#     return JsonResponse(data=res, status=200)
+#
+#
+# def get_period(request):
+#     from django_celery_beat.models import PERIOD_CHOICES
+#     periods = list(PERIOD_CHOICES)
+#     res = {"period": []}
+#     for period in periods:
+#         _, data = period
+#         res["period"].append(data)
+#     return JsonResponse(data=res, status=200)
 
 
-def get_period(request):
-    from django_celery_beat.models import PERIOD_CHOICES
-    periods = list(PERIOD_CHOICES)
-    res = {"period": []}
-    for period in periods:
-        _, data = period
-        res["period"].append(data)
-    return JsonResponse(data=res, status=200)
-
-
-def index(request):
+def create_index(request):
     if request.method != "POST":
         return JsonResponse(data={"status": "failure", "info": "The failed request method must be POST!!!"}, status=200)
     name = ""
@@ -108,16 +108,26 @@ def index(request):
     return JsonResponse(data={"asdasd": "asd"}, status=200)
 
 
+def index(request):
+    msg = {
+        "Welcome": "Welcome here.Have a nice day!!!",
+        "Path": {
+            "create": "You can create a task",
+            "install": "install the scanner",
+            "celert-start": "start celery server",
+            "celery-restart": "restart celery server",
+            "celery-stop": "stop celery server",
+            "celery-status": "return celery status",
+        }
+    }
+    return JsonResponse(data=msg, status=200)
+
 urlpatterns = [
-    url('create/', index, name="index"),
-    url('tasks/', get_tasks, name="tasks"),
-    url("periods/", get_period, name="periods"),
-    # url('nmap/', include("scanner_nmap.urls")),
-    # url('zmap/', include("scanner_zmap.urls")),
-    # url('vul/', include("scanner_vul.urls")),
+    url('create/', create_index, name="create_index"),
     url('install/', include("install.urls")),
     url('celery-start/', celery_start, name="celery-start"),
     url('celery-restart/', celery_restart, name="celery-retsrat"),
     url('celery-stop/', celery_stop, name="celery-stop"),
     url('celery-status/', celery_status, name="celery-status"),
+    url('', index, name="index"),
 ]

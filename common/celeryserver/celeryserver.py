@@ -19,6 +19,7 @@ import subprocess
 import os
 import signal
 import threading
+import sys
 
 
 class CeleryServer(object):
@@ -26,6 +27,9 @@ class CeleryServer(object):
     _instance_lock = threading.Lock()
 
     def __init__(self):
+        path = sys.executable.split("/")
+        path.pop()
+        self.celerypath = "/".join(path) + "/"
         self.PID = "/tmp/celery.pid"
 
     def __new__(cls, *args, **kwargs):
@@ -50,7 +54,10 @@ class CeleryServer(object):
         if os.path.exists(self.PID):
             with open(self.PID) as f:
                 pid = int(f.read())
-                os.kill(pid, signal.SIGTERM)
+                try:
+                    os.kill(pid, signal.SIGTERM)
+                except Exception as e:
+                    pass
                 os.remove(self.PID)
             return True
         else:
@@ -72,7 +79,7 @@ class CeleryServer(object):
     def _run(self):
         path = os.path.dirname(os.path.abspath(__file__))
         os.chdir(path + "/../../")
-        cmdline = "celery -A scanner worker -l info"
+        cmdline = self.celerypath + "celery -A scanner worker -l info"
         child = subprocess.Popen(cmdline, shell=True)
         with open(self.PID, 'w') as f:
             f.write(str(child.pid))

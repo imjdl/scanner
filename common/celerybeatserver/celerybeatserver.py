@@ -19,6 +19,7 @@ import subprocess
 import os
 import signal
 import threading
+import sys
 
 
 class CeleryBeatServer(object):
@@ -26,6 +27,9 @@ class CeleryBeatServer(object):
     _instance_lock = threading.Lock()
 
     def __init__(self):
+        path = sys.executable.split("/")
+        path.pop()
+        self.celerybeatpath = "/".join(path) + "/"
         self.PID = "/tmp/celerybeat.pid"
 
     def __new__(cls, *args, **kwargs):
@@ -50,7 +54,10 @@ class CeleryBeatServer(object):
         if os.path.exists(self.PID):
             with open(self.PID) as f:
                 pid = int(f.read())
-                os.kill(pid, signal.SIGTERM)
+                try:
+                    os.kill(pid, signal.SIGTERM)
+                except Exception as e:
+                    pass
                 os.remove(self.PID)
             return True
         else:
@@ -72,7 +79,7 @@ class CeleryBeatServer(object):
     def _run(self):
         path = os.path.dirname(os.path.abspath(__file__))
         os.chdir(path + "/../../")
-        cmdline = "celery -A scanner beat -l info -S django"
+        cmdline = self.celerybeatpath + "celery -A scanner beat -l info -S django"
         child = subprocess.Popen(cmdline, shell=True)
         with open(self.PID, 'w') as f:
             f.write(str(child.pid))
