@@ -6,7 +6,6 @@ from django_celery_beat.models import PeriodicTask, PeriodicTasks, IntervalSched
 
 import datetime
 
-
 PEROID_CHOICE = {
         "SECONDS": IntervalSchedule.SECONDS,
         "DAYS": IntervalSchedule.DAYS,
@@ -97,25 +96,4 @@ def index(request):
             return JsonResponse(data={"status": "failure", "info": "Create Peridoic Tasks failure"}, status=200)
 
     return JsonResponse(data={"status": "success", "info": "Create Peridoic Tasks success!!"}, status=200)
-
-
-def get_tasks(request):
-    periodic_task_list = PeriodicTask.objects.all()
-    return JsonResponse(data={"status": "success", "info": modle_to_dict(periodic_task_list)}, status=200)
-
-
-def modle_to_dict(modles):
-    datas = []
-    for modle in modles:
-        data = {}
-        data["id"] = modle.id
-        data["name"] = modle.name
-        data["enable"] = modle.enabled
-        if modle.start_time == None:
-            data["start_time"] = ""
-        else:
-            data["start_time"] = modle.start_time.strftime("%Y-%m-%d %H:%M:%S")
-        data["one_off"] = modle.one_off
-        datas.append(data)
-    return datas
 

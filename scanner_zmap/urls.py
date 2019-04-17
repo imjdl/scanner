@@ -19,6 +19,5 @@ from django.conf.urls import url
 from scanner_zmap import views
 
 urlpatterns = [
-    url(r"^tasks/", views.get_tasks, name="tasks"),
     url(r"^", views.index, name="index"),
 ]

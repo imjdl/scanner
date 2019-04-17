@@ -44,6 +44,7 @@ from common.IPlocate.ipinfo import IPInfo
 import time
 import Queue as queue
 import json
+import base64
 
 tasks = queue.Queue()
 
@@ -53,6 +54,9 @@ class sc_nmap():
     def __init__(self, ips=None):
         # self.ips = " ".join(ips) if ips != None else None
         # self.ports = ",".join(ports) if ports != None else None
+        if not isinstance(ips, list):
+            ips = base64.b64decode(ips)
+            ips = json.loads(ips)
         self.results = []
         for ip in ips:
             tasks.put(ip)
@@ -78,6 +82,7 @@ class sc_nmap():
             data = tasks.get()
             ip = data["ip"].encode("UTF-8")
             port = data["port"].encode("UTF-8")
+            print ip, port
             nm = PortScanner()
             nm.scan(hosts=ip, ports=port, arguments="-sV -Pn -O -T5", sudo=True)
             self._get_res(nm)

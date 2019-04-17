@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from common.elastic.elastic_ip import es_elasticsearch
+import json
 
 
 class es_data(object):
@@ -21,7 +22,7 @@ class es_data(object):
         ips = []
         for ip in res["hits"]["hits"]:
             ips.append({"ip": ip["_source"]["HOST"].encode("UTF-8"), "port": ip["_source"]["PORT"].encode("UTF-8")})
-        return ips
+        return json.dumps(ips)
 
     # 指定某一网段获取IP
     def get_ip_for_cidr(self, cidr):
@@ -37,7 +38,7 @@ class es_data(object):
         ips = []
         for ip in res["hits"]["hits"]:
             ips.append({"ip": ip["_source"]["HOST"].encode("UTF-8"), "port": ip["_source"]["PORT"].encode("UTF-8")})
-        return ips
+        return json.dumps(ips)
 
     def cidr_to_ips(self, cidr):
         from netaddr import IPNetwork
