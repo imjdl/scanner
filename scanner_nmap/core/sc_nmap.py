@@ -50,20 +50,14 @@ tasks = queue.Queue()
 
 class sc_nmap():
 
-    def __init__(self, ips=None, ports=None):
+    def __init__(self, ips=None):
         # self.ips = " ".join(ips) if ips != None else None
-        self.ports = ",".join(ports) if ports != None else None
+        # self.ports = ",".join(ports) if ports != None else None
         self.results = []
         for ip in ips:
             tasks.put(ip)
 
     def scan_ip_port(self):
-        """
-        nmap -sv -Pn 192.168.1.1 192.168.1.2 -p 80
-        nmap -sV -Pn 192.168.1.1 192.168.1.2 -p 22,80,6379
-        nmap -sV -Pn 192.168.1.1 192.168.1.2
-        :return: list
-        """
         gevent.joinall([
             gevent.spawn(self._scan),
             gevent.spawn(self._scan),
@@ -81,9 +75,11 @@ class sc_nmap():
 
     def _scan(self):
         while not tasks.empty():
-            ip = tasks.get()
+            data = tasks.get()
+            ip = data["ip"].encode("UTF-8")
+            port = data["port"].encode("UTF-8")
             nm = PortScanner()
-            nm.scan(hosts=ip, ports=self.ports, arguments="-sV -Pn -O -T5", sudo=True)
+            nm.scan(hosts=ip, ports=port, arguments="-sV -Pn -O -T5", sudo=True)
             self._get_res(nm)
 
     def _get_res(self, nmap_obj):

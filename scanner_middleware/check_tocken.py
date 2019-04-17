@@ -30,7 +30,18 @@ class CheckTokenMiddleware(MiddlewareMixin):
     def process_request(self, request):
         allow_method = ["GET", "POST"]
         if '/' == request.path:
-            return JsonResponse({"status": "failure", "info": ""}, status=404)
+            msg = {
+                "Welcome": "Welcome here.Have a nice day!!!",
+                "Path": {
+                    "create": "You can create a task",
+                    "install": "install the scanner",
+                    "celert-start": "start celery server",
+                    "celery-restart": "restart celery server",
+                    "celery-stop": "stop celery server",
+                    "celery-status": "return celery status",
+                }
+            }
+            return JsonResponse(data=msg, status=200)
         if "install" != request.path.split("/")[1]:
             method = request.method
             if method not in allow_method:

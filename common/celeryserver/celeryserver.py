@@ -54,6 +54,7 @@ class CeleryServer(object):
         if os.path.exists(self.PID):
             with open(self.PID) as f:
                 pid = int(f.read())
+                print pid
                 try:
                     os.kill(pid, signal.SIGTERM)
                 except Exception as e:

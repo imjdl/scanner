@@ -54,3 +54,4 @@ def udp_scan(hosts, port):
     except ZmapNotFound as e:
         return {}
     return res
+

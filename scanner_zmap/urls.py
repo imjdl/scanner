@@ -20,7 +20,5 @@ from scanner_zmap import views
 
 urlpatterns = [
     url(r"^tasks/", views.get_tasks, name="tasks"),
-    url(r"^res/", views.get_res, name="get"),
-    url(r'^state/', views.get_statues, name="state"),
     url(r"^", views.index, name="index"),
 ]

@@ -9,24 +9,28 @@ from celery.result import AsyncResult
 
 
 def index(request):
-    zmap_task_id = request.GET.get("id")
-    zmap_list = AsyncResult(zmap_task_id).get()
-    port= []
-    port.append(str(zmap_list["port"]))
-    res = tasks.nmap_scan.delay(zmap_list["ips"], port)
+    tyep = request.GET.get("type")
+    vaule = request.GET.get("vaule")
+    if tyep == None or vaule == None:
+        return JsonResponse(data={"status": "failure", "info": "params is error"}, status=401)
+    from scanner_nmap.core.es_data import es_data
+    es = es_data()
+    if tyep == "cidr":
+        ips = es.get_ip_for_cidr(vaule)
+    elif tyep == "port":
+        ips = es.get_ip_for_port(vaule)
+    print ips
+    res = tasks.nmap_scan.delay(ips=ips)
     return JsonResponse({"status": "successful", 'task_id': res.task_id})
 
 
 def get_res(request):
-    id = request.GET.get("id")
-    res_list = AsyncResult(id).get()
-    res_responce = {}
-    for res in res_list:
-        res_responce = dict(res_responce, **res)
-    return JsonResponse(res_responce)
 
-
-def get_statues(request):
-    id = request.GET.get("id")
-    state = AsyncResult(id).state
-    return HttpResponse(state)
+    # print
+    # print es.get_ip_for_port("3306")
+    # id = request.GET.get("id")
+    # res_list = AsyncResult(id).get()
+    # res_responce = {}
+    # for res in res_list:
+    #     res_responce = dict(res_responce, **res)
+    return JsonResponse({"status": "successful"})
