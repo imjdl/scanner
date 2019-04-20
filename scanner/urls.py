@@ -18,6 +18,7 @@ from django_celery_beat.models import PeriodicTask
 from django.http import JsonResponse
 from install.views import celery_restart, celery_start, celery_status, celery_stop
 
+from django.middleware.csrf import get_token
 import datetime
 import time
 
@@ -41,7 +42,6 @@ def modle_to_dict(modles):
         datas.append(data)
     return datas
 
-
 def utc2local(utc_st):
     now_stamp = time.time()
     local_time = datetime.datetime.fromtimestamp(now_stamp)
@@ -49,6 +49,7 @@ def utc2local(utc_st):
     offset = local_time - utc_time
     local_st = utc_st + offset
     return local_st
+
 
 urlpatterns = [
     url('tasks/', get_tasks, name="tasks"),

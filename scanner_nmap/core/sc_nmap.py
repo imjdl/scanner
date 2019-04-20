@@ -108,7 +108,7 @@ class sc_nmap():
                             info["date"] = time.strftime("%Y-%m-%d %H:%M:%S")
                             info["vendor"] = json.dumps(nmap_obj[host]["vendor"])
                             try:
-                                info["OS"] = nmap_obj[host]["osmatch"][0]["name"]
+                                info["OS"] = nmap_obj[host]["osmatch"][-1]["name"]
                             except Exception as e:
                                 info["OS"] = ""
                             info['server'] = nmap_obj[host][protocol][key]["product"]

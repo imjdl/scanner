@@ -6,6 +6,7 @@ from django_celery_beat.models import PeriodicTask, PeriodicTasks, IntervalSched
 
 import datetime
 
+
 PEROID_CHOICE = {
         "SECONDS": IntervalSchedule.SECONDS,
         "DAYS": IntervalSchedule.DAYS,
@@ -16,8 +17,8 @@ PEROID_CHOICE = {
 
 
 def index(request):
-    if request.method != "GET":
-        return JsonResponse(data={"status": "failure", "info": "The failed request method must be GET!!!"}, status=200)
+    if request.method != "POST":
+        return JsonResponse(data={"status": "failure", "info": "The failed request method must be POST!!!"}, status=200)
     params = {
         "name": "",
         "task_name": "",
@@ -36,10 +37,10 @@ def index(request):
         "ips": "",
         "port": "",
     }
-    if request.GET.items() == []:
+    if request.POST.items() == []:
         return JsonResponse(data={"status": "failure", "info": "params is error"}, status=401)
 
-    for key, value in request.GET.items():
+    for key, value in request.POST.items():
         if key not in params.keys() and key != "token":
             return JsonResponse(data={"status": "failure", "info": "params is error"}, status=401)
         params[key] = value
@@ -96,4 +97,25 @@ def index(request):
             return JsonResponse(data={"status": "failure", "info": "Create Peridoic Tasks failure"}, status=200)
 
     return JsonResponse(data={"status": "success", "info": "Create Peridoic Tasks success!!"}, status=200)
+
+
+def get_tasks(request):
+    periodic_task_list = PeriodicTask.objects.all()
+    return JsonResponse(data={"status": "success", "info": modle_to_dict(periodic_task_list)}, status=200)
+
+
+def modle_to_dict(modles):
+    datas = []
+    for modle in modles:
+        data = {}
+        data["id"] = modle.id
+        data["name"] = modle.name
+        data["enable"] = modle.enabled
+        if modle.start_time == None:
+            data["start_time"] = ""
+        else:
+            data["start_time"] = modle.start_time.strftime("%Y-%m-%d %H:%M:%S")
+        data["one_off"] = modle.one_off
+        datas.append(data)
+    return datas
 

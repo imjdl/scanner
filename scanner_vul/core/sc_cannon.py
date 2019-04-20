@@ -64,10 +64,10 @@ class sc_cannon(object):
 
 if __name__ == '__main__':
     info = {"pocname": "demo",
-            "pocstring": open("demo.py", 'r').read(),
+            "pocstring": open("PoC.py", 'r').read(),
             "mode": "verify"
             }
-    with open('demo.csv', 'r') as f:
+    with open('data.csv', 'r') as f:
         targets = f.readlines()
     sc = sc_cannon(targets=targets, info=info, threads=100)
     res = sc.run()

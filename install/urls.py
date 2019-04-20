@@ -15,8 +15,9 @@
 '''
 
 from django.conf.urls import url, include
-from install.views import install
+from install.views import install, update
 
 urlpatterns = [
     url(r"^$", install, name="install"),
+    url("update", update, name="install"),
 ]

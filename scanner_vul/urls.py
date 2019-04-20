@@ -14,11 +14,10 @@
 @desc:
 
 '''
+
 from django.conf.urls import url
 from scanner_vul import views
 
 urlpatterns = [
-    url("^res/", views.get_res, name="get"),
-    url('^state/', views.get_statues, name="state"),
     url("^", views.index, name="index"),
 ]

@@ -18,8 +18,8 @@ PEROID_CHOICE = {
 
 
 def index(request):
-    if request.method != "GET":
-        return JsonResponse(data={"status": "failure", "info": "The failed request method must be GET!!!"}, status=200)
+    if request.method != "POST":
+        return JsonResponse(data={"status": "failure", "info": "The failed request method must be POST!!!"}, status=200)
     params = {
         "name": "",
         "task_name": "",
@@ -38,12 +38,11 @@ def index(request):
         "type": "",
         "vaule":"",
     }
-    if request.GET.items() == []:
+    if request.POST.items() == []:
         return JsonResponse(data={"status": "failure", "info": "params is error"}, status=401)
 
-    for key, value in request.GET.items():
+    for key, value in request.POST.items():
         if key not in params.keys() and key != "token":
-            print key
             return JsonResponse(data={"status": "failure", "info": "params is error"}, status=401)
         params[key] = value
 

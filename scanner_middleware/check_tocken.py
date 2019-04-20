@@ -33,7 +33,9 @@ class CheckTokenMiddleware(MiddlewareMixin):
             msg = {
                 "Welcome": "Welcome here.Have a nice day!!!",
                 "Path": {
-                    "create": "You can create a task",
+                    "create_zamp": "You can create a zmap scan task",
+                    "create_nmap": "You can create a nmap scan task",
+                    "create_vul": "You can create a vul scan task",
                     "install": "install the scanner",
                     "celert-start": "start celery server",
                     "celery-restart": "restart celery server",
@@ -50,6 +52,7 @@ class CheckTokenMiddleware(MiddlewareMixin):
                 token = request.GET.get("token")
             else:
                 token = request.POST.get("token")
+                print token
             if token == None:
                 return JsonResponse({"status": "failure", "info": "You must issue a certificate!"}, status=401)
             objects = Scanner.objects.all()
