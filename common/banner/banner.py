@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
+
 '''
 @author:
-     _ _       _ _   
+     _ _       _ _
   ___| | | ___ (_) |_ 
  / _ \ | |/ _ \| | __|
 |  __/ | | (_) | | |_ 

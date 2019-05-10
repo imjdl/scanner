@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
+
 '''
 @author:
      _ _       _ _
@@ -14,6 +15,7 @@
 @desc:
 Package cannon to sc_cannon
 '''
+
 from pocsuite.api.cannon import Cannon
 from threading import Thread
 from threading import Lock
@@ -50,8 +52,7 @@ class sc_cannon(object):
 
     def scan(self, target):
         global lock
-        c = Cannon(target=target, info=self.info, mode=self.mode, params=self.params, headers=self.headers,
-                   timeout=self.timeout)
+        c = Cannon(target=target, info=self.info, mode=self.mode, params=self.params, headers=self.headers, timeout=self.timeout)
         try:
             res = c.run()
             if res[5][0] == 1:
@@ -64,11 +65,13 @@ class sc_cannon(object):
 
 if __name__ == '__main__':
     info = {"pocname": "demo",
-            "pocstring": open("PoC.py", 'r').read(),
+            "pocstring": open("poc.py", 'r').read(),
             "mode": "verify"
             }
-    with open('data.csv', 'r') as f:
-        targets = f.readlines()
+    print info
+    # with open('data.csv', 'r') as f:
+    #     targets = f.readlines()
+    targets = ["https://123.207.235.207"]
     sc = sc_cannon(targets=targets, info=info, threads=100)
     res = sc.run()
     for data in res:

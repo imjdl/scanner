@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
+
 '''
 @author:
      _ _       _ _   
@@ -52,7 +53,6 @@ class CheckTokenMiddleware(MiddlewareMixin):
                 token = request.GET.get("token")
             else:
                 token = request.POST.get("token")
-                print token
             if token == None:
                 return JsonResponse({"status": "failure", "info": "You must issue a certificate!"}, status=401)
             objects = Scanner.objects.all()

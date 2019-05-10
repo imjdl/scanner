@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
+
 '''
 @author:
      _ _       _ _   
@@ -21,6 +22,8 @@ import signal
 import threading
 import sys
 
+from common.randomStr.randomstr import randomstr
+
 
 class CeleryServer(object):
     # thread safe
@@ -30,7 +33,7 @@ class CeleryServer(object):
         path = sys.executable.split("/")
         path.pop()
         self.celerypath = "/".join(path) + "/"
-        self.PID = "/tmp/celery.pid"
+        self.PID = "/tmp/" + randomstr(8) + "_celery.pid"
 
     def __new__(cls, *args, **kwargs):
         if not hasattr(CeleryServer, "_instance"):
@@ -54,7 +57,6 @@ class CeleryServer(object):
         if os.path.exists(self.PID):
             with open(self.PID) as f:
                 pid = int(f.read())
-                print pid
                 try:
                     os.kill(pid, signal.SIGTERM)
                 except Exception as e:

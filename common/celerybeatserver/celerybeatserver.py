@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
+
 '''
 @author:
      _ _       _ _   
@@ -21,6 +22,8 @@ import signal
 import threading
 import sys
 
+from common.randomStr.randomstr import randomstr
+
 
 class CeleryBeatServer(object):
     # thread safe
@@ -30,7 +33,7 @@ class CeleryBeatServer(object):
         path = sys.executable.split("/")
         path.pop()
         self.celerybeatpath = "/".join(path) + "/"
-        self.PID = "/tmp/celerybeat.pid"
+        self.PID = "/tmp/" + randomstr(num=8) + "_celerybeat.pid"
 
     def __new__(cls, *args, **kwargs):
         if not hasattr(CeleryBeatServer, "_instance"):

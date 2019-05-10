@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
 '''
 @author:
      _ _       _ _   
@@ -45,10 +45,11 @@ class es_elasticsearch(object):
             return False
         actions = []
         for data in datas:
+            print data["POCNAME"]
             action = {
                 "_index": self.index_name,
                 "_type": self.doc_type,
-                "_id": data["URL"],
+                "_id": data["URL"] + ":::" + data["POCNAME"],
                 "HOST": data["URL"],
                 "POCNAME": data["POCNAME"],
                 "POCID": data["POCID"],
@@ -67,6 +68,5 @@ class es_elasticsearch(object):
                 "CITY": data["CITY"]
             }
             actions.append(action)
-        bulk(client=self.es, actions=actions, index=self.index_name, doc_type=self.doc_type)
-
+        bulk(client=self.es, actions=actions, index=self.index_name, doc_type=self.doc_type, request_timeout=100)
 

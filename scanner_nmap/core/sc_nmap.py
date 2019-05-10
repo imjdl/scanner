@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
 
 _doc__ = '''
 @author: elliot
@@ -82,7 +82,6 @@ class sc_nmap():
             data = tasks.get()
             ip = data["ip"].encode("UTF-8")
             port = data["port"].encode("UTF-8")
-            print ip, port
             nm = PortScanner()
             nm.scan(hosts=ip, ports=port, arguments="-sV -Pn -O -T5", sudo=True)
             self._get_res(nm)

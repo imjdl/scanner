@@ -1,10 +1,13 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 from django.http import HttpResponse, JsonResponse
 from django_celery_beat.models import PeriodicTask, PeriodicTasks, IntervalSchedule, CrontabSchedule
 # Create your views here.
 
 import datetime
+import base64
 
 
 PEROID_CHOICE = {

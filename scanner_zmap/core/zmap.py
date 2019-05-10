@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
+
 '''
 @author: elliot
 @contact: imelloit@gmail.com
@@ -25,7 +26,6 @@ class Zmap(object):
     def syn_scan(self, ips, port=80):
         port = str(port)
         cmdline = [self.zmap_path, ips, "-M", "tcp_synscan", "-p", port]
-        print cmdline
         p = sp.Popen(cmdline, stdout=sp.PIPE, stderr=sp.PIPE)
         ipres, _ = p.communicate()
         ipres = ipres.decode("UTF-8").split("\n")

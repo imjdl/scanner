@@ -9,7 +9,7 @@ import re
 class ElastciSearch(object):
 
     def __init__(self):
-        self.es = Elasticsearch(hosts=ELASTICSEARCH_HOST_LIST)
+        self.es = Elasticsearch(hosts=ELASTICSEARCH_HOST_LIST, )
         self.index_name = ES_INDEX_NAME
         self.doc_type = ES_DOC_TYPE
         # if not self.es.indices.exists(index=self.index_name):
@@ -34,9 +34,21 @@ class ElastciSearch(object):
         datas = self._analysis(datas=datas)
         if isinstance(datas, tuple):
             datas = datas[0]
-        for data in datas:
-            print data
         return datas
+
+    def get_ip_port(self, datas):
+        datas = self.search(datas=datas)
+        urls = []
+        for hit in datas:
+            ip = hit["_source"]["HOST"]
+            port = hit["_source"]["PORT"]
+            protocol = hit["_source"]["PROTOCOL"]
+            if "https" in protocol:
+                url = "https://" + ip + ":" + str(port)
+            else:
+                url = "http://" + ip + ":" + str(port)
+            urls.append(url)
+        return urls
 
     def _analysis(self, datas):
         """
@@ -72,8 +84,17 @@ class ElastciSearch(object):
                 datas[keys[i]] = values[i]
             data = self.combination(datas=datas)
         if data:
-            res = self.es.search(index=self.index_name, doc_type=self.doc_type, body=data)
-            return res["hits"], keys
+            # 改为游标查询，获取全部数据
+            res = self.es.search(index=self.index_name, doc_type=self.doc_type, body=data, scroll='1m')
+            hits = []
+            hits += res["hits"]["hits"]
+            scroll_id = res["_scroll_id"]
+            while True:
+                hit = self.es.scroll(scroll_id=scroll_id, scroll="1m")["hits"]["hits"]
+                hits += hit
+                if hit == []:
+                    break
+            return hits, keys
         else:
             return False, keys
 
@@ -157,8 +178,16 @@ class ElastciSearch(object):
                 }
             }
         }
-        res = self.es.search(index=self.index_name, doc_type=self.doc_type, body=data)
-        return res["hits"]
+        res = self.es.search(index=self.index_name, doc_type=self.doc_type, body=data, scroll='1m')
+        hits = []
+        hits += res["hits"]["hits"]
+        scroll_id = res["_scroll_id"]
+        while True:
+            hit = self.es.scroll(scroll_id=scroll_id, scroll="1m")["hits"]["hits"]
+            hits += hit
+            if hit == []:
+                break
+        return hits
 
     def getport(self, value):
         data = {
@@ -233,8 +262,10 @@ class ElastciSearch(object):
 def main():
     es = ElastciSearch()
     # res = es.search("ip:210.43.32.30")
-    res = es.search("linux")
-    # print(res)
+    # res = es.search("os:apache")
+    res = es.get_ip_port("ourphp")
+    # res = es.get_ip_port("os:apache")
+    print res
 
 
 if __name__ == '__main__':

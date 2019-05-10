@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
+
 '''
 @author:
      _ _       _ _   
@@ -103,9 +104,7 @@ class ConfigAPI:
 
     def save(self):
         with open(self.path, "w") as f:
-            print etree.tostring(self.root)
             f.write(etree.tostring(self.root))
-
 
 if __name__ == '__main__':
     print ConfigAPI().set_es_config(hosts=["127.0.0.1"])
