@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
+
 '''
 @author:
      _ _       _ _   
@@ -28,10 +29,30 @@ class CheckTokenMiddleware(MiddlewareMixin):
     """
 
     def process_request(self, request):
+        allow_method = ["GET", "POST"]
         if '/' == request.path:
-            return JsonResponse({"status": "failure", "info": ""}, status=404)
+            msg = {
+                "Welcome": "Welcome here.Have a nice day!!!",
+                "Path": {
+                    "create_zamp": "You can create a zmap scan task",
+                    "create_nmap": "You can create a nmap scan task",
+                    "create_vul": "You can create a vul scan task",
+                    "install": "install the scanner",
+                    "celert-start": "start celery server",
+                    "celery-restart": "restart celery server",
+                    "celery-stop": "stop celery server",
+                    "celery-status": "return celery status",
+                }
+            }
+            return JsonResponse(data=msg, status=200)
         if "install" != request.path.split("/")[1]:
-            token = request.GET.get("token")
+            method = request.method
+            if method not in allow_method:
+                return JsonResponse({"status": "failure", "info": "You must request GET or POST!"}, status=401)
+            if method == 'GET':
+                token = request.GET.get("token")
+            else:
+                token = request.POST.get("token")
             if token == None:
                 return JsonResponse({"status": "failure", "info": "You must issue a certificate!"}, status=401)
             objects = Scanner.objects.all()

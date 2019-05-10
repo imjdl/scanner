@@ -10,14 +10,7 @@
  
 @contact: imelloit@gmail.com
 @software: PyCharm
-@file: urls.py
+@file: __init__.py.py
 @desc:
 
 '''
-
-from django.conf.urls import url
-from scanner_vul import views
-
-urlpatterns = [
-    url("^", views.index, name="index"),
-]

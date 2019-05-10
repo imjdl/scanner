@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
 
 _doc__ = '''
 @author: elliot
@@ -44,26 +44,24 @@ from common.IPlocate.ipinfo import IPInfo
 import time
 import Queue as queue
 import json
+import base64
 
 tasks = queue.Queue()
 
 
 class sc_nmap():
 
-    def __init__(self, ips=None, ports=None):
+    def __init__(self, ips=None):
         # self.ips = " ".join(ips) if ips != None else None
-        self.ports = ",".join(ports) if ports != None else None
+        # self.ports = ",".join(ports) if ports != None else None
+        if not isinstance(ips, list):
+            ips = base64.b64decode(ips)
+            ips = json.loads(ips)
         self.results = []
         for ip in ips:
             tasks.put(ip)
 
     def scan_ip_port(self):
-        """
-        nmap -sv -Pn 192.168.1.1 192.168.1.2 -p 80
-        nmap -sV -Pn 192.168.1.1 192.168.1.2 -p 22,80,6379
-        nmap -sV -Pn 192.168.1.1 192.168.1.2
-        :return: list
-        """
         gevent.joinall([
             gevent.spawn(self._scan),
             gevent.spawn(self._scan),
@@ -81,9 +79,11 @@ class sc_nmap():
 
     def _scan(self):
         while not tasks.empty():
-            ip = tasks.get()
+            data = tasks.get()
+            ip = data["ip"].encode("UTF-8")
+            port = data["port"].encode("UTF-8")
             nm = PortScanner()
-            nm.scan(hosts=ip, ports=self.ports, arguments="-sV -Pn -O -T5", sudo=True)
+            nm.scan(hosts=ip, ports=port, arguments="-sV -Pn -O -T5", sudo=True)
             self._get_res(nm)
 
     def _get_res(self, nmap_obj):
@@ -107,7 +107,7 @@ class sc_nmap():
                             info["date"] = time.strftime("%Y-%m-%d %H:%M:%S")
                             info["vendor"] = json.dumps(nmap_obj[host]["vendor"])
                             try:
-                                info["OS"] = nmap_obj[host]["osmatch"][0]["name"]
+                                info["OS"] = nmap_obj[host]["osmatch"][-1]["name"]
                             except Exception as e:
                                 info["OS"] = ""
                             info['server'] = nmap_obj[host][protocol][key]["product"]

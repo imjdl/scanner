@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
+
 '''
 @author:
      _ _       _ _   
@@ -54,3 +55,4 @@ def udp_scan(hosts, port):
     except ZmapNotFound as e:
         return {}
     return res
+

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
 '''
 @author: elliot
 @contact: imelloit@gmail.com
@@ -73,4 +73,4 @@ class es_elasticsearch(object):
                     "CITY": value["city"],
                 }
                 actions.append(action)
-        bulk(client=self.es, actions=actions, index=self.index_name, doc_type=self.doc_type)
+        bulk(client=self.es, actions=actions, index=self.index_name, doc_type=self.doc_type, request_timeout=100)

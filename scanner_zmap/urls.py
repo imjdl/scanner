@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# coding = UTF-8
+# -*- coding: utf-8 -*-
+
 '''
 @author:
      _ _       _ _   
@@ -19,7 +20,5 @@ from django.conf.urls import url
 from scanner_zmap import views
 
 urlpatterns = [
-    url(r"^res/", views.get_res, name="get"),
-    url(r'^state/', views.get_statues, name="state"),
     url(r"^", views.index, name="index"),
 ]

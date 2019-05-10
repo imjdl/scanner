@@ -40,14 +40,15 @@ INSTALLED_APPS = [
     "scanner_nmap",
     "scanner_zmap",
     "scanner_vul",
-    "install"
+    "install",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -136,3 +137,10 @@ CELERY_RESULT_BACKEND = CELERY_RESULT_BACKEND
 
 CELERY_RESULT_SERIALIZER = 'json'
 
+CELERY_ENABLE_UTC = False
+
+CELERY_TIMEZONE = "Asia/Shanghai"
+
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+CELERYD_MAX_TASKS_PER_CHILD = 3

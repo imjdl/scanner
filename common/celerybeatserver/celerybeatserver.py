@@ -11,7 +11,7 @@
  
 @contact: imelloit@gmail.com
 @software: PyCharm
-@file: celeryserver.py
+@file: celerybeatserver.py
 @desc:
 
 '''
@@ -25,22 +25,22 @@ import sys
 from common.randomStr.randomstr import randomstr
 
 
-class CeleryServer(object):
+class CeleryBeatServer(object):
     # thread safe
     _instance_lock = threading.Lock()
 
     def __init__(self):
         path = sys.executable.split("/")
         path.pop()
-        self.celerypath = "/".join(path) + "/"
-        self.PID = "/tmp/" + randomstr(8) + "_celery.pid"
+        self.celerybeatpath = "/".join(path) + "/"
+        self.PID = "/tmp/" + randomstr(num=8) + "_celerybeat.pid"
 
     def __new__(cls, *args, **kwargs):
-        if not hasattr(CeleryServer, "_instance"):
-            with CeleryServer._instance_lock:
-                if not hasattr(CeleryServer, "_instance"):
-                    CeleryServer._instance = object.__new__(cls)
-        return CeleryServer._instance
+        if not hasattr(CeleryBeatServer, "_instance"):
+            with CeleryBeatServer._instance_lock:
+                if not hasattr(CeleryBeatServer, "_instance"):
+                    CeleryBeatServer._instance = object.__new__(cls)
+        return CeleryBeatServer._instance
 
     def check(self):
         if os.path.exists(self.PID):
@@ -82,10 +82,7 @@ class CeleryServer(object):
     def _run(self):
         path = os.path.dirname(os.path.abspath(__file__))
         os.chdir(path + "/../../")
-        cmdline = self.celerypath + "celery -A scanner worker -l info"
+        cmdline = self.celerybeatpath + "celery -A scanner beat -l info -S django"
         child = subprocess.Popen(cmdline, shell=True)
         with open(self.PID, 'w') as f:
             f.write(str(child.pid))
-
-# from common.celeryserver.celeryserver import CeleryServer
-# CeleryServer().start()
