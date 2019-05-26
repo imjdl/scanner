@@ -20,7 +20,6 @@ PEROID_CHOICE = {
 
 
 def index(request):
-<<<<<<< HEAD
     # type syn or udp
     scantype = request.GET.get("type", None)
     ips = request.GET.get("ips", None)
@@ -50,7 +49,6 @@ def get_statues(request):
     id = request.GET.get("id")
     from celery.result import AsyncResult
     return HttpResponse(AsyncResult(id).state)
-=======
     if request.method != "POST":
         return JsonResponse(data={"status": "failure", "info": "The failed request method must be POST!!!"}, status=200)
     params = {
@@ -153,4 +151,3 @@ def modle_to_dict(modles):
         datas.append(data)
     return datas
 
->>>>>>> dev
