@@ -82,7 +82,7 @@ class CeleryServer(object):
     def _run(self):
         path = os.path.dirname(os.path.abspath(__file__))
         os.chdir(path + "/../../")
-        cmdline = self.celerypath + "celery -A scanner worker -l info"
+        cmdline = "celery -A scanner worker -l info"
         child = subprocess.Popen(cmdline, shell=True)
         with open(self.PID, 'w') as f:
             f.write(str(child.pid))

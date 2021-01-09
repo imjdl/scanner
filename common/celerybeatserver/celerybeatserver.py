@@ -82,7 +82,7 @@ class CeleryBeatServer(object):
     def _run(self):
         path = os.path.dirname(os.path.abspath(__file__))
         os.chdir(path + "/../../")
-        cmdline = self.celerybeatpath + "celery -A scanner beat -l info -S django"
+        cmdline = "celery -A scanner beat -l info -S django"
         child = subprocess.Popen(cmdline, shell=True)
         with open(self.PID, 'w') as f:
             f.write(str(child.pid))

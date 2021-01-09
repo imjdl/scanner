@@ -21,34 +21,17 @@ PEROID_CHOICE = {
 
 def index(request):
     # type syn or udp
-    scantype = request.GET.get("type", None)
-    ips = request.GET.get("ips", None)
-    port = request.GET.get("port", None)
-    if scantype == "syn":
-        res = tasks.syn_scan.delay(hosts=ips, port=port)
-        return JsonResponse({"status": "successful", 'task_id': res.task_id})
-
-    if scantype == "udp":
-        res = tasks.udp_scan.delay(hosts=ips, port=port)
-        return JsonResponse({"status": "successful", 'task_id': res.task_id})
-    return JsonResponse({"status": "failure", 'task_id': ""})
-
-
-def get_res(request):
-    id = request.GET.get("id")
-    from celery.result import AsyncResult
-    res_list = AsyncResult(id).get()
-    try:
-        res_list["ips"].remove("")
-    except Exception as e:
-        pass
-    return JsonResponse(res_list)
-
-
-def get_statues(request):
-    id = request.GET.get("id")
-    from celery.result import AsyncResult
-    return HttpResponse(AsyncResult(id).state)
+    # scantype = request.GET.get("type", None)
+    # ips = request.GET.get("ips", None)
+    # port = request.GET.get("port", None)
+    # if scantype == "syn":
+    #     res = tasks.syn_scan.delay(hosts=ips, port=port)
+    #     return JsonResponse({"status": "successful", 'task_id': res.task_id})
+    #
+    # if scantype == "udp":
+    #     res = tasks.udp_scan.delay(hosts=ips, port=port)
+    #     return JsonResponse({"status": "successful", 'task_id': res.task_id})
+    # return JsonResponse({"status": "failure", 'task_id': ""})
     if request.method != "POST":
         return JsonResponse(data={"status": "failure", "info": "The failed request method must be POST!!!"}, status=200)
     params = {
@@ -129,6 +112,24 @@ def get_statues(request):
             return JsonResponse(data={"status": "failure", "info": "Create Peridoic Tasks failure"}, status=200)
 
     return JsonResponse(data={"status": "success", "info": "Create Peridoic Tasks success!!"}, status=200)
+
+
+
+def get_res(request):
+    id = request.GET.get("id")
+    from celery.result import AsyncResult
+    res_list = AsyncResult(id).get()
+    try:
+        res_list["ips"].remove("")
+    except Exception as e:
+        pass
+    return JsonResponse(res_list)
+
+
+def get_statues(request):
+    id = request.GET.get("id")
+    from celery.result import AsyncResult
+    return HttpResponse(AsyncResult(id).state)
 
 
 def get_tasks(request):
